@@ -1,0 +1,200 @@
+:root,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.dashboard-layout {
+  display: flex;
+  height: 100vh;
+  background-color: #f8f9fa;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  overflow: hidden;
+}
+
+.dashboard-sidebar {
+  width: 250px;
+  background-color: #1f2933;
+  color: #ffffff;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.dashboard-sidebar__logo {
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dashboard-sidebar__link {
+  color: #6b7280;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.dashboard-sidebar__link:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.dashboard-sidebar__link--active {
+  background-color: #c1121f;
+  color: #ffffff;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.dashboard-header__title {
+  color: #1f2933;
+  margin: 0 0 8px 0;
+  font-size: 28px;
+}
+
+.dashboard-header__subtitle {
+  color: #6b7280;
+  margin: 0;
+}
+
+.dashboard-header__btn-primary {
+  background-color: #c1121f;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dashboard-header__btn-primary:hover {
+  background-color: #e76f51;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.dashboard-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(31, 41, 51, 0.05);
+  border: 1px solid #e5e7eb;
+}
+
+.dashboard-card__title {
+  color: #1f2933;
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #1d3557;
+}
+
+.activity-item__title {
+  color: #1f2933;
+  margin: 0 0 4px 0;
+  font-size: 16px;
+}
+
+.activity-item__date {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.activity-item__badge {
+  background-color: #fdf2f2;
+  color: #c1121f;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mock-calendar__header {
+  text-align: center;
+  font-weight: 600;
+  color: #1f2933;
+  margin-bottom: 16px;
+}
+
+.mock-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+
+.mock-calendar__day-name {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  padding-bottom: 8px;
+}
+
+.mock-calendar__day {
+  color: #1f2933;
+  font-size: 14px;
+  padding: 8px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mock-calendar__day:hover {
+  background-color: #f8f9fa;
+}
+
+.mock-calendar__day--active {
+  background-color: #c1121f;
+  color: #ffffff;
+  font-weight: bold;
+}
