@@ -1,0 +1,52 @@
+{
+  "programs": [
+    {
+      "id": "1",
+      "title": "Reforestación del Urubó",
+      "status": "Activo",
+      "volunteersNeeded": 50
+    },
+    {
+      "id": "2",
+      "title": "Apoyo escolar en la Villa 1ro de Mayo",
+      "status": "Planificación",
+      "volunteersNeeded": 20
+    },
+    {
+      "id": "3",
+      "title": "Limpieza de las riberas del Río Piraí",
+      "status": "Planificación",
+      "volunteersNeeded": 100
+    },
+    {
+      "id": "4",
+      "title": "Rescate de animales callejeros - Plan 3000",
+      "status": "Activo",
+      "volunteersNeeded": 15
+    },
+    {
+      "id": "5",
+      "title": "Campaña de donación de sangre",
+      "status": "Completado",
+      "volunteersNeeded": 10
+    },
+    {
+      "id": "6",
+      "title": "Olla común para familias vulnerables",
+      "status": "Activo",
+      "volunteersNeeded": 8
+    },
+    {
+      "id": "7",
+      "title": "Taller de alfabetización digital para adultos",
+      "status": "Completado",
+      "volunteersNeeded": 5
+    },
+    {
+      "id": "8",
+      "title": "Colecta de abrigos y frazadas por invierno",
+      "status": "Planificación",
+      "volunteersNeeded": 30
+    }
+  ]
+}

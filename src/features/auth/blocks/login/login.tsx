@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginMock } from '../../api/mockAuth';
 import './login.css';
+import { useAuthStore } from '../../../../store/authStore';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const login = useAuthStore((state) => state.login);
 
   const navigate = useNavigate();
 
@@ -20,9 +22,11 @@ export const Login = () => {
       const user = await loginMock(email, password);
       console.log('¡Usuario logueado con éxito!', user);
 
+      login(email);
       navigate('/dashboard');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
     } finally {
       setIsLoading(false);
     }
