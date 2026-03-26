@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useAuthStore } from '../../../store/authStore';
-import { usePrograms, useDeleteProgram } from '../api/usePrograms';
+import { usePrograms, useDeleteProgram, useCreateProgram } from '../api/usePrograms';
 import './AdminDashboard.css';
 import deleteIcon from '../../../assets/delete.svg';
 
@@ -13,8 +14,31 @@ interface Program {
 export const AdminDashboard = () => {
   const userEmail = useAuthStore((state) => state.userEmail);
   const logout = useAuthStore((state) => state.logout);
+
   const { data: programs, isLoading, isError, error } = usePrograms();
   const deleteMutation = useDeleteProgram();
+  const { mutate: addProgram, isPending: isCreating } = useCreateProgram();
+
+  const [showForm, setShowForm] = useState(false);
+  const [title, setTitle] = useState('');
+  const [status, setStatus] = useState('Activo');
+  const [volunteersNeeded, setVolunteersNeeded] = useState<number | ''>('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title.trim() || !volunteersNeeded) return;
+
+    addProgram({
+      title,
+      status,
+      volunteersNeeded: Number(volunteersNeeded),
+    });
+
+    setTitle('');
+    setStatus('Activo');
+    setVolunteersNeeded('');
+    setShowForm(false);
+  };
 
   return (
     <div className="dashboard-layout">
@@ -55,12 +79,85 @@ export const AdminDashboard = () => {
             <h1 className="dashboard-header__title">Panel de Control</h1>
             <p className="dashboard-header__subtitle">Gestión de programas de voluntariado</p>
           </div>
-          <button className="dashboard-header__btn-primary">+ Nuevo Programa</button>
+          <button className="dashboard-header__btn-primary" onClick={() => setShowForm(!showForm)}>
+            {showForm ? 'Cancelar' : '+ Nuevo Programa'}
+          </button>
         </header>
 
         <div className="dashboard-grid">
           <section className="dashboard-card">
             <h2 className="dashboard-card__title">Programas Activos</h2>
+
+            {showForm && (
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  backgroundColor: '#f9fafb',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  marginBottom: '20px',
+                  border: '1px solid #e5e7eb',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px',
+                }}
+              >
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <input
+                    type="text"
+                    placeholder="Título (ej. Reforestación)"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    style={{
+                      flex: '1',
+                      padding: '8px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                    }}
+                  />
+                  <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                  >
+                    <option value="Activo">Activo</option>
+                    <option value="Completado">Completado</option>
+                    <option value="Pausado">Pausado</option>
+                  </select>
+                  <input
+                    type="number"
+                    placeholder="Voluntarios req."
+                    value={volunteersNeeded}
+                    onChange={(e) => setVolunteersNeeded(Number(e.target.value))}
+                    required
+                    min="1"
+                    style={{
+                      width: '130px',
+                      padding: '8px',
+                      border: '1px solid #ccc',
+                      borderRadius: '4px',
+                    }}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isCreating}
+                  style={{
+                    backgroundColor: '#0d9488',
+                    color: 'white',
+                    padding: '8px 16px',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  {isCreating ? 'Guardando...' : 'Guardar Programa'}
+                </button>
+              </form>
+            )}
+            {/* ------------------------------------------------ */}
 
             <div className="activity-list">
               {isLoading && (

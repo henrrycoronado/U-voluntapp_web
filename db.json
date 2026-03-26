@@ -43,10 +43,17 @@
       "volunteersNeeded": 5
     },
     {
-      "id": "8",
-      "title": "Colecta de abrigos y frazadas por invierno",
-      "status": "Planificación",
-      "volunteersNeeded": 30
+      "id": "60f1",
+      "title": "Ayudantía Progra",
+      "status": "Activo",
+      "volunteersNeeded": 6
+    },
+    {
+      "id": "4d3c",
+      "title": "Curso intensivo de critología",
+      "status": "Pausado",
+      "volunteersNeeded": 100
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

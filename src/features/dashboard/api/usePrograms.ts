@@ -31,3 +31,30 @@ export const useDeleteProgram = () => {
     },
   });
 };
+
+const createProgram = async (newProgram: {
+  title: string;
+  status: string;
+  volunteersNeeded: number;
+}) => {
+  const response = await fetch('http://localhost:3000/programs', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newProgram),
+  });
+
+  if (!response.ok) throw new Error('Error al crear el programa');
+  return response.json();
+};
+
+export const useCreateProgram = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createProgram,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['programs'] });
+    },
+  });
+};
