@@ -32,3 +32,14 @@ export const useEnrollProgram = () => {
     return response.data;
   };
 };
+
+export const useRequestCoordinatorRole = () => {
+  return async (email: string, reason: string, durationInMonths: number) => {
+    const response = await apiClient.post('/api/v1/roles/requests/coordinator', {
+      email,
+      reason,
+      durationInMonths,
+    });
+    return response.data;
+  };
+};

@@ -51,3 +51,14 @@ export const useReviewEnrollment = () => {
     return response.data;
   };
 };
+
+export const useRequestAdminRole = () => {
+  return async (email: string, reason: string) => {
+    const response = await apiClient.post('/api/v1/roles/requests/admin', {
+      email,
+      reason,
+      durationInMonths: null,
+    });
+    return response.data;
+  };
+};

@@ -1,9 +1,42 @@
-import { Briefcase, Users, Clock } from 'lucide-react';
+import { Briefcase, Users, Clock, Shield } from 'lucide-react';
+import { useState } from 'react';
 import { useCoordinatorData } from '../api/hooks';
-import { Alert, AnalyticsCard, Card, Button } from '../../../components';
+import { useRequestAdminRole } from '../hooks';
+import { useAuthStore } from '../../../store/authStore';
+import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 
 export default function Dashboard() {
   const { data, loading, error } = useCoordinatorData();
+  const { user } = useAuthStore();
+  const requestAdmin = useRequestAdminRole();
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [roleRequest, setRoleRequest] = useState({ reason: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleRequestAdmin = async () => {
+    if (!roleRequest.reason.trim() || !user?.email) {
+      setMessage({ type: 'error', text: 'Por favor explica tu motivo' });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await requestAdmin(user.email, roleRequest.reason);
+      setMessage({
+        type: 'success',
+        text: '✓ Solicitud enviada exitosamente. Espera aprobación de SuperUser.',
+      });
+      setRoleRequest({ reason: '' });
+      setTimeout(() => setShowRoleModal(false), 2000);
+    } catch (err) {
+      setMessage({
+        type: 'error',
+        text: `Error: ${err instanceof Error ? err.message : 'No se pudo enviar la solicitud'}`,
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -15,6 +48,14 @@ export default function Dashboard() {
           </Button>
           <Button variant="primary" size="sm">
             Nueva Actividad
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => setShowRoleModal(true)}
+            className="flex items-center gap-2"
+          >
+            <Shield size={16} /> Solicitar Admin
           </Button>
         </div>
       </div>
@@ -71,6 +112,32 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Modal
+        isOpen={showRoleModal}
+        onClose={() => setShowRoleModal(false)}
+        size="md"
+        title="Solicitar ser Administrador"
+      >
+        {message && <Alert type={message.type} message={message.text} />}
+        <div className="space-y-4 mt-6">
+          <TextArea
+            label="Motivo de la solicitud"
+            placeholder="Explica por qué quieres ser administrador..."
+            value={roleRequest.reason}
+            onChange={(e) => setRoleRequest({ reason: e.target.value })}
+            rows={4}
+          />
+          <div className="flex gap-2 justify-end">
+            <Button variant="secondary" onClick={() => setShowRoleModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="danger" onClick={handleRequestAdmin} disabled={submitting}>
+              {submitting ? 'Enviando...' : 'Enviar Solicitud'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -1,9 +1,42 @@
-import { AlertCircle, Award, Clock } from 'lucide-react';
+import { AlertCircle, Award, Clock, Zap } from 'lucide-react';
+import { useState } from 'react';
 import { useVolunteerData } from '../api/hooks';
-import { Alert, AnalyticsCard, Card, Button } from '../../../components';
+import { useRequestCoordinatorRole } from '../hooks';
+import { useAuthStore } from '../../../store/authStore';
+import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 
 export default function Dashboard() {
   const { data, loading, error } = useVolunteerData();
+  const { user } = useAuthStore();
+  const requestCoordinator = useRequestCoordinatorRole();
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [roleRequest, setRoleRequest] = useState({ reason: '', months: 12 });
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleRequestCoordinator = async () => {
+    if (!roleRequest.reason.trim() || !user?.email) {
+      setMessage({ type: 'error', text: 'Por favor explica tu motivo' });
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await requestCoordinator(user.email, roleRequest.reason, roleRequest.months);
+      setMessage({
+        type: 'success',
+        text: '✓ Solicitud enviada exitosamente. Espera aprobación de un Admin.',
+      });
+      setRoleRequest({ reason: '', months: 12 });
+      setTimeout(() => setShowRoleModal(false), 2000);
+    } catch (err) {
+      setMessage({
+        type: 'error',
+        text: `Error: ${err instanceof Error ? err.message : 'No se pudo enviar la solicitud'}`,
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -15,6 +48,14 @@ export default function Dashboard() {
           </Button>
           <Button variant="secondary" size="sm">
             Mis Inscripciones
+          </Button>
+          <Button
+            variant="success"
+            size="sm"
+            onClick={() => setShowRoleModal(true)}
+            className="flex items-center gap-2"
+          >
+            <Zap size={16} /> Solicitar Coordinador
           </Button>
         </div>
       </div>
@@ -73,6 +114,45 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
+
+      <Modal
+        isOpen={showRoleModal}
+        onClose={() => setShowRoleModal(false)}
+        size="md"
+        title="Solicitar ser Coordinador"
+      >
+        {message && <Alert type={message.type} message={message.text} />}
+        <div className="space-y-4">
+          <TextArea
+            label="Motivo de la solicitud"
+            placeholder="Explica por qué quieres ser coordinador..."
+            value={roleRequest.reason}
+            onChange={(e) => setRoleRequest({ ...roleRequest, reason: e.target.value })}
+            rows={4}
+          />
+          <div>
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+              Duración (meses)
+            </label>
+            <input
+              type="number"
+              value={roleRequest.months}
+              onChange={(e) => setRoleRequest({ ...roleRequest, months: parseInt(e.target.value) })}
+              min={1}
+              max={36}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+            />
+          </div>
+          <div className="flex gap-2 justify-end">
+            <Button variant="secondary" onClick={() => setShowRoleModal(false)}>
+              Cancelar
+            </Button>
+            <Button variant="success" onClick={handleRequestCoordinator} disabled={submitting}>
+              {submitting ? 'Enviando...' : 'Enviar Solicitud'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
