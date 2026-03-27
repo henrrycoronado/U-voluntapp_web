@@ -7,5 +7,5 @@ interface VolunteerData {
 }
 
 export function useVolunteerData() {
-  return useFetch<VolunteerData>('/api/v1/profile/me');
+  return useFetch<VolunteerData>('/api/v1/profiles/me');
 }

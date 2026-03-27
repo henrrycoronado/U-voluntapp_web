@@ -2,7 +2,7 @@ import { useFetch } from '../../hooks/useFetch';
 import { apiClient } from '../../api/client';
 
 export const useProfile = () => {
-  return useFetch(`/profiles/me`);
+  return useFetch(`/api/v1/profiles/me`);
 };
 
 export const usePrograms = () => {
