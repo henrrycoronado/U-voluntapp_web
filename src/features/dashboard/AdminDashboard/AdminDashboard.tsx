@@ -4,6 +4,7 @@ import { useAuthStore } from '../../../store/authStore';
 import { usePrograms, useDeleteProgram, useCreateProgram } from '../api/usePrograms';
 import './AdminDashboard.css';
 import deleteIcon from '../../../assets/delete.svg';
+import { SkeletonList } from '../../../components/Skeleton/SkeletonList';
 
 import {
   LayoutDashboard,
@@ -165,7 +166,8 @@ export const AdminDashboard = ({ moduleName = 'Programas' }: Props) => {
                 )}
 
                 <div className="activity-list">
-                  {isLoading && <p>Cargando programas...</p>}
+                  {isLoading && <SkeletonList count={3} />}
+
                   {isError && (
                     <p style={{ color: '#c1121f' }}>
                       Error: {error instanceof Error ? error.message : 'Error al conectar'}

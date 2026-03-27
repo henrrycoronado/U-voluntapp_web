@@ -3,6 +3,7 @@ import { useAuthStore } from '../../store/authStore';
 import { usePrograms } from '../dashboard/api/usePrograms';
 import '../dashboard/AdminDashboard/AdminDashboard.css';
 import './VolunteerDashboard.css';
+import { SkeletonList } from '../../components/Skeleton/SkeletonList';
 
 import {
   LayoutDashboard,
@@ -98,7 +99,7 @@ export const VolunteerDashboard = ({ moduleName = 'Programas' }: Props) => {
               </p>
             </header>
 
-            {isLoading && <p>Cargando programas increíbles...</p>}
+            {isLoading && <SkeletonList count={3} />}
 
             <div className="volunteer-grid">
               {programs &&
