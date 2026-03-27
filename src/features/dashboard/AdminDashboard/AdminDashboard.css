@@ -1,71 +1,96 @@
-:root,
-html,
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .dashboard-layout {
   display: flex;
   height: 100vh;
-  background-color: #f8f9fa;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
-  overflow: hidden;
+  width: 100%;
+  background-color: #f3f4f6;
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden; 
 }
 
 .dashboard-sidebar {
-  width: 250px;
-  background-color: #1f2933;
-  color: #ffffff;
-  padding: 24px;
+  width: 260px;
+  background-color: #1f2937; 
+  color: white;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  padding: 24px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  z-index: 10;
   box-sizing: border-box;
 }
 
 .dashboard-sidebar__logo {
-  color: #ffffff;
-  font-size: 24px;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: white;
+  letter-spacing: 0.5px;
 }
 
-.dashboard-sidebar__nav {
+.dashboard-sidebar__nav-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
+  margin-top: 20px;
 }
 
 .dashboard-sidebar__link {
-  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #d1d5db;
   text-decoration: none;
   padding: 12px;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
 }
 
-.dashboard-sidebar__link:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
-}
-
+.dashboard-sidebar__link:hover,
 .dashboard-sidebar__link--active {
-  background-color: #c1121f;
-  color: #ffffff;
+  background-color: #374151;
+  color: white;
+}
+
+.dashboard-sidebar__footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 20px;
+  border-top: 1px solid #374151;
+}
+
+.dashboard-sidebar__user-label {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.dashboard-sidebar__logout {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: 1px solid #4b5563;
+  cursor: pointer;
+  text-align: left;
+  color: #d1d5db;
+  padding: 10px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+}
+
+.dashboard-sidebar__logout:hover {
+  background-color: #ef4444; 
+  color: white;
+  border-color: #ef4444;
 }
 
 .dashboard-main {
   flex: 1;
   padding: 40px;
-  overflow-y: auto;
-  height: 100vh;
+  overflow-y: auto; 
   box-sizing: border-box;
 }
 
@@ -73,13 +98,14 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .dashboard-header__title {
-  color: #1f2933;
-  margin: 0 0 8px 0;
-  font-size: 28px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #111827;
+  margin: 0 0 5px 0;
 }
 
 .dashboard-header__subtitle {
@@ -88,18 +114,18 @@ body {
 }
 
 .dashboard-header__btn-primary {
-  background-color: #c1121f;
+  background-color: #e11d48;
   color: white;
+  padding: 10px 20px;
   border: none;
-  padding: 12px 24px;
   border-radius: 8px;
-  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  font-weight: bold;
+  transition: background-color 0.2s;
 }
 
 .dashboard-header__btn-primary:hover {
-  background-color: #e76f51;
+  background-color: #be123c;
 }
 
 .dashboard-grid {
@@ -109,163 +135,152 @@ body {
 }
 
 .dashboard-card {
-  background-color: #ffffff;
-  border-radius: 12px;
+  background-color: white;
   padding: 24px;
-  box-shadow: 0 4px 6px rgba(31, 41, 51, 0.05);
-  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-card__title {
-  color: #1f2933;
-  margin: 0 0 20px 0;
-  font-size: 18px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #e5e7eb;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #1f2937;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 10px;
 }
 
 .activity-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
 }
 
 .activity-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  background-color: #f8f9fa;
+  padding: 15px;
+  background-color: #f9fafb;
   border-radius: 8px;
-  border-left: 4px solid #1d3557;
+  border: 1px solid #e5e7eb;
 }
 
 .activity-item__title {
-  color: #1f2933;
-  margin: 0 0 4px 0;
-  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  color: #111827;
 }
 
 .activity-item__date {
+  font-size: 0.85rem;
   color: #6b7280;
-  font-size: 13px;
 }
 
 .activity-item__badge {
-  background-color: #fdf2f2;
-  color: #c1121f;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.mock-calendar__header {
-  text-align: center;
-  font-weight: 600;
-  color: #1f2933;
-  margin-bottom: 16px;
-}
-
-.mock-calendar__grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
-  text-align: center;
-}
-
-.mock-calendar__day-name {
-  color: #6b7280;
-  font-size: 12px;
-  font-weight: 600;
-  padding-bottom: 8px;
-}
-
-.mock-calendar__day {
-  color: #1f2933;
-  font-size: 14px;
-  padding: 8px 0;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.mock-calendar__day:hover {
-  background-color: #f8f9fa;
-}
-
-.mock-calendar__day--active {
-  background-color: #c1121f;
-  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
   font-weight: bold;
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
-/* --- SKELETON LOADING --- */
-@keyframes skeleton-pulse {
-  0% {
-    background-color: #e2e8f0;
-  }
-  50% {
-    background-color: #cbd5e1;
-  }
-  100% {
-    background-color: #e2e8f0;
-  }
-}
-
-.skeleton-box {
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
-  border-radius: 4px;
-}
-
-.skeleton-title {
-  height: 20px;
-  width: 60%;
-  margin-bottom: 8px;
-}
-
-.skeleton-text {
-  height: 14px;
-  width: 40%;
-}
-
-.skeleton-badge {
-  height: 24px;
-  width: 80px;
-  border-radius: 20px;
-}
-
-/* --- BOTÓN ELIMINAR --- */
 .btn-delete-program {
-  background: none;
+  background: transparent;
   border: none;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  padding: 5px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.btn-delete-program__icon {
-  width: 20px;
-  height: 20px;
-  opacity: 0.6;
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
-}
-
-.btn-delete-program:hover:not(:disabled) {
+.btn-delete-program:hover {
   background-color: #fee2e2;
 }
 
-.btn-delete-program:hover:not(:disabled) .btn-delete-program__icon {
-  opacity: 1;
-  transform: scale(1.1);
+.btn-delete-program__icon {
+  width: 20px;
+  height: 20px;
 }
 
-.btn-delete-program:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.program-form {
+  background-color: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.program-form__group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.program-form__input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.program-form__input--flex {
+  flex: 1;
+}
+
+.program-form__input--small {
+  width: 130px;
+}
+
+.program-form__submit {
+  background-color: #0d9488;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.program-form__submit:hover {
+  background-color: #0f766e;
+}
+
+.mock-calendar__header {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.mock-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  text-align: center;
+}
+
+.mock-calendar__day-name {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 5px;
+}
+
+.mock-calendar__day {
+  padding: 8px 0;
+  font-size: 0.9rem;
+  border-radius: 50%;
+}
+
+.mock-calendar__day--active {
+  background-color: #e11d48;
+  color: white;
+  font-weight: bold;
 }
