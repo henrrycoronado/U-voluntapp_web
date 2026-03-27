@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginMock } from '../../api/mockAuth';
 import './login.css';
 import { useAuthStore } from '../../../../store/authStore';
+import type { UserRole } from '../../../../store/authStore';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,11 +19,23 @@ export const Login = () => {
     setError(null);
 
     try {
-      const user = await loginMock(email, password);
-      console.log('¡Usuario logueado con éxito!', user);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      login(email);
-      navigate('/dashboard');
+      let assignedRole: UserRole = 'Volunteer';
+
+      if (email.toLowerCase().includes('admin')) {
+        assignedRole = 'Admin';
+      } else if (email.toLowerCase().includes('colab')) {
+        assignedRole = 'Coordinator';
+      }
+
+      login(email, assignedRole);
+
+      if (assignedRole === 'Volunteer') {
+        navigate('/volunteer');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       setError(message);
@@ -37,24 +49,29 @@ export const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="login-form__header">
           <h2 className="login-form__title">U-Voluntapp</h2>
-          <p className="login-form__subtitle">Portal de Administración</p>
+          <p className="login-form__subtitle">Inicia sesión en tu cuenta</p>
         </div>
 
         {error && <div className="login-form__error">{error}</div>}
 
         <div className="login-form__group">
-          <label className="login-form__label">Correo Electrónico</label>
+          <label htmlFor="email" className="login-form__label">
+            Correo Electrónico
+          </label>
           <input
+            id="email"
+            name="email"
+            autoComplete="email"
             type="email"
             className="login-form__input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@ucb.edu.bo"
+            placeholder="ejemplo@ucb.edu.bo"
             required
           />
         </div>
 
-        <div className="login-form__group">
+        <div className="login-form__group" style={{ marginBottom: '1.5rem' }}>
           <label className="login-form__label">Contraseña</label>
           <input
             type="password"

@@ -1,0 +1,102 @@
+.volunteer-main {
+  background-color: #f3f4f6;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.volunteer-header {
+  margin-bottom: 2rem;
+}
+
+.volunteer-header__title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+}
+
+.volunteer-header__subtitle {
+  color: #6b7280;
+}
+
+.volunteer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.volunteer-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.volunteer-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.volunteer-card__title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1f2937;
+  margin: 0;
+}
+
+.volunteer-card__badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.volunteer-card__badge--active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.volunteer-card__badge--default {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.volunteer-card__description {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.volunteer-card__button {
+  width: 100%;
+  padding: 10px;
+  background-color: #0d9488;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.volunteer-card__button:hover {
+  background-color: #0f766e;
+}
+
+.volunteer-sidebar-btn {
+  background: transparent;
+  border: 1px solid #6b7280;
+  cursor: pointer;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.volunteer-sidebar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
