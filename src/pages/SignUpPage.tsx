@@ -90,10 +90,10 @@ export default function SignUpPage() {
           />
 
           <Input
-            label="Teléfono (opcional)"
+            label="Teléfono"
             type="tel"
             name="phone"
-            placeholder="+1234567890"
+            placeholder="+591 712345**"
             value={values.phone || ''}
             onChange={handleChange}
             error={errors.phone}

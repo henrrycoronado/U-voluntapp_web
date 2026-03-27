@@ -1,5 +1,5 @@
-import { useFetch } from '../../hooks/useFetch';
-import { apiClient } from '../../api/client';
+import { useFetch } from '../../../hooks/useFetch';
+import { apiClient } from '../../../api/client';
 
 export const useProfile = () => {
   return useFetch(`/api/v1/profiles/me`);

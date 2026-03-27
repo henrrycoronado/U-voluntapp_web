@@ -1,7 +1,7 @@
 import { AlertCircle, Award, Clock, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useVolunteerData } from '../api/hooks';
-import { useRequestCoordinatorRole } from '../hooks';
+import { useRequestCoordinatorRole } from '../hooks/hooks';
 import { useAuthStore } from '../../../store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 

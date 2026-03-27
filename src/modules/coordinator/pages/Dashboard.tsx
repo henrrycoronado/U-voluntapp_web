@@ -1,7 +1,7 @@
 import { Briefcase, Users, Clock, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useCoordinatorData } from '../api/hooks';
-import { useRequestAdminRole } from '../hooks';
+import { useRequestAdminRole } from '../hooks/hooks';
 import { useAuthStore } from '../../../store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 

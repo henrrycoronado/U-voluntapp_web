@@ -1,5 +1,5 @@
-import { useFetch } from '../../hooks/useFetch';
-import { apiClient } from '../../api/client';
+import { useFetch } from '../../../hooks/useFetch';
+import { apiClient } from '../../../api/client';
 
 export const useMyPrograms = () => {
   return useFetch(`/programs`);
