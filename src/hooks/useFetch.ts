@@ -23,7 +23,7 @@ export function useFetch<T>(url: string, options: UseFetchOptions = {}) {
       try {
         setLoading(true);
         const response = await apiClient.get<ApiResponse<T>>(url);
-        setData(response.data.data || response.data);
+        setData(response.data.data as T);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error fetching data');

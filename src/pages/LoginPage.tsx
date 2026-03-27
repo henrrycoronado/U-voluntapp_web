@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
+import type { LoginRequest } from '../types/auth';
 import { Card, Button, Input, Alert } from '../components';
 import { useForm } from '../hooks/useForm';
 import { authApi } from '../api/auth';
@@ -20,7 +21,7 @@ export default function LoginPage() {
         password: [[validators.required, 'La contraseña es requerida']],
       }),
     onSubmit: async (vals: Record<string, string>) => {
-      const response = await authApi.login(vals);
+      const response = await authApi.login(vals as unknown as LoginRequest);
       if (response.success) {
         setAuth(response.data);
         navigate('/volunteer');

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { useThemeStore } from '../store/themeStore';
+import type { RegisterRequest } from '../types/auth';
 import { Card, Button, Input, Alert } from '../components';
 import { useForm } from '../hooks/useForm';
 import { authApi } from '../api/auth';
@@ -23,7 +24,7 @@ export default function SignUpPage() {
         phone: [[validators.phone, 'Teléfono inválido']],
       }),
     onSubmit: async (vals: Record<string, string>) => {
-      const response = await authApi.register(vals);
+      const response = await authApi.register(vals as unknown as RegisterRequest);
       if (response.success) {
         setAuth(response.data);
         navigate('/volunteer');

@@ -58,11 +58,20 @@ export default function Table<T = Record<string, unknown>>({
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {data.map((row, idx) => (
               <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                {columns.map((col) => (
-                  <td key={col.key} className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                    {col.render ? col.render(row[col.key], row) : row[col.key]}
-                  </td>
-                ))}
+                {columns.map((col) => {
+                  const rowRecord = row as Record<string, unknown>;
+                  const cellContent = col.render
+                    ? (col.render(rowRecord[col.key], row) as React.ReactNode)
+                    : (rowRecord[col.key] as React.ReactNode);
+                  return (
+                    <td
+                      key={col.key}
+                      className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100"
+                    >
+                      {cellContent}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
