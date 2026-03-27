@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import './login.css';
 import { useAuthStore } from '../../../../store/authStore';
 import type { UserRole } from '../../../../store/authStore';
@@ -9,9 +9,14 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const login = useAuthStore((state) => state.login);
+
+  const { login, isAuthenticated, role } = useAuthStore();
 
   const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    return <Navigate to={role === 'Volunteer' ? '/volunteer' : '/dashboard'} replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +25,6 @@ export const Login = () => {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
       let assignedRole: UserRole = 'Volunteer';
 
       if (email.toLowerCase().includes('admin')) {
@@ -90,6 +94,20 @@ export const Login = () => {
         >
           {isLoading ? 'Verificando...' : 'Iniciar Sesión'}
         </button>
+
+        <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+          <Link
+            to="/register"
+            style={{
+              color: '#0d9488',
+              textDecoration: 'none',
+              fontSize: '14px',
+              fontWeight: '500',
+            }}
+          >
+            ¿No tienes cuenta? Solicita tu acceso aquí
+          </Link>
+        </div>
       </form>
     </div>
   );
