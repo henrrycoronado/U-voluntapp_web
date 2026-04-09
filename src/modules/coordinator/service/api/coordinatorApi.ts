@@ -1,62 +1,76 @@
 import { apiClient } from '../../../../service/api/client';
-import type {
-  CoordinatorData,
-  Program,
-  Activity,
-  Enrollment,
-  CreateProgramRequest,
-  CreateActivityRequest,
-} from '../types';
+import {
+  programsApi,
+  activitiesApi,
+  enrollmentsApi,
+  roleRequestsApi,
+  collaboratorsApi,
+} from '../../../../service/api';
+import type { CoordinatorData, CreateProgramRequest, CreateActivityRequest } from '../types';
+import type { ApiResponse } from '../../../../service/types/api';
 
 export const coordinatorApi = {
   // Dashboard
-  getDashboardData: () => apiClient.get<CoordinatorData>('/api/v1/programs'),
+  getDashboardData: () => apiClient.get<ApiResponse<CoordinatorData>>('/api/v1/programs'),
 
-  // Programs
-  getMyPrograms: () => apiClient.get<Program[]>('/api/v1/programs'),
+  // Programs - CRUD (can create/edit own programs)
+  getMyPrograms: () => programsApi.getAll(),
 
-  getProgramById: (id: number) => apiClient.get<Program>(`/api/v1/programs/${id}`),
+  getProgramById: (id: number) => programsApi.getById(id),
 
-  createProgram: (data: CreateProgramRequest) => apiClient.post<Program>('/api/v1/programs', data),
+  createProgram: (data: CreateProgramRequest) => programsApi.create(data),
 
   updateProgram: (id: number, data: Partial<CreateProgramRequest>) =>
-    apiClient.put<Program>(`/api/v1/programs/${id}`, data),
+    programsApi.update(id, data as CreateProgramRequest),
 
-  // Activities
-  getActivitiesByProgram: (programId: number) =>
-    apiClient.get<Activity[]>(`/api/v1/activities/by-program/${programId}`),
+  // Activities - CRUD operations
+  getActivityById: (id: number) => activitiesApi.getById(id),
 
-  getActivityById: (id: number) => apiClient.get<Activity>(`/api/v1/activities/${id}`),
+  getActivitiesByProgram: (programId: number) => activitiesApi.getByProgram(programId),
 
-  createActivity: (data: CreateActivityRequest) =>
-    apiClient.post<Activity>('/api/v1/activities', data),
+  createActivity: (data: CreateActivityRequest) => activitiesApi.create(data),
+
+  createActivitySimple: (data: Record<string, unknown>) =>
+    activitiesApi.createSimple(data as Parameters<typeof activitiesApi.createSimple>[0]),
 
   updateActivity: (id: number, data: Partial<CreateActivityRequest>) =>
-    apiClient.put<Activity>(`/api/v1/activities/${id}`, data),
+    activitiesApi.update(id, data as CreateActivityRequest),
 
-  changeActivityState: (id: number, stateId: number) =>
-    apiClient.patch(`/api/v1/activities/${id}/state`, { stateId }),
+  deleteActivity: (id: number) => activitiesApi.delete(id),
 
-  // Enrollments
-  getEnrollmentsByActivity: (activityId: number) =>
-    apiClient.get<Enrollment[]>(`/api/v1/enrollments/by-activity/${activityId}`),
+  changeActivityState: (id: number, stateId: number) => activitiesApi.changeState(id, { stateId }),
+
+  // Enrollments - Review & Management
+  getEnrollmentById: (id: number) => enrollmentsApi.getById(id),
+
+  getEnrollmentsByActivity: (activityId: number) => enrollmentsApi.getByActivity(activityId),
 
   reviewEnrollment: (enrollmentId: number, approved: boolean) =>
-    apiClient.patch(`/api/v1/enrollments/${enrollmentId}/review`, { approved }),
+    enrollmentsApi.review(enrollmentId, { approved }),
 
-  // Role Requests
-  requestAdminRole: (email: string, reason: string) =>
-    apiClient.post('/api/v1/roles/requests/admin', { email, reason }),
+  cancelEnrollment: (enrollmentId: number, reason?: string) =>
+    enrollmentsApi.cancel(enrollmentId, { reason }),
 
-  // Collaborators
+  // Role Requests - Request escalation to Admin
+  requestAdminRole: (reason?: string) => roleRequestsApi.requestAdmin({ reason }),
+
+  getPendingCoordinatorRequests: () => roleRequestsApi.getPendingCoordinator(),
+
+  approveCoordinatorRequest: (id: number) => roleRequestsApi.approveCoordinator(id),
+
+  rejectCoordinatorRequest: (id: number, reason?: string) =>
+    roleRequestsApi.rejectCoordinator(id, { reason }),
+
+  // Program Collaborators - Team management
+  getCollaboratorsByProgram: (programId: number) => collaboratorsApi.getByProgram(programId),
+
+  getCollaboratorById: (id: number) => collaboratorsApi.getById(id),
+
   addProgramCollaborator: (data: Record<string, unknown>) =>
-    apiClient.post('/api/v1/collaborators', data),
+    collaboratorsApi.create(data as Parameters<typeof collaboratorsApi.create>[0]),
 
-  getCollaboratorsByProgram: (programId: number) =>
-    apiClient.get(`/api/v1/collaborators/program/${programId}`),
+  updateCollaborator: (id: number, accessLevel: number) =>
+    collaboratorsApi.update(id, { accessLevel }),
 
-  updateCollaborator: (id: number, data: Record<string, unknown>) =>
-    apiClient.put(`/api/v1/collaborators/${id}`, data),
-
-  removeCollaborator: (id: number) => apiClient.delete(`/api/v1/collaborators/${id}`),
+  removeCollaborator: (id: number) => collaboratorsApi.delete(id),
 };
