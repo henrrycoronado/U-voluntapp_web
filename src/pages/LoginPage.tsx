@@ -6,6 +6,7 @@ import { Card, Button, Input, Alert } from '../components';
 import { useForm } from '../hooks/useForm';
 import { authApi } from '../api/auth';
 import { validateForm, validators } from '../utils/validators';
+import { getErrorMessage } from '../utils/errorHandler';
 import { Moon, Sun } from 'lucide-react';
 
 export default function LoginPage() {
@@ -21,12 +22,12 @@ export default function LoginPage() {
         password: [[validators.required, 'La contraseña es requerida']],
       }),
     onSubmit: async (vals: Record<string, string>) => {
-      const response = await authApi.login(vals as unknown as LoginRequest);
-      if (response.success) {
+      try {
+        const response = await authApi.login(vals as unknown as LoginRequest);
         setAuth(response.data);
         navigate('/volunteer');
-      } else {
-        throw new Error(response.message || 'Error al iniciar sesión');
+      } catch (error) {
+        throw new Error(getErrorMessage(error));
       }
     },
   });
