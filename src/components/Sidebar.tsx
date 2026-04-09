@@ -1,4 +1,4 @@
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../utils/store/authStore';
 import { BarChart3, Users, Settings } from 'lucide-react';
 
 export default function Sidebar() {

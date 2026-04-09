@@ -1,8 +1,7 @@
 import { AlertCircle, Award, Clock, Zap, User, ClipboardList } from 'lucide-react';
 import { useState } from 'react';
-import { useVolunteerData } from '../api/hooks';
-import { useRequestCoordinatorRole } from '../hooks/hooks';
-import { useAuthStore } from '../../../store/authStore';
+import { useVolunteerData, useRequestCoordinatorRole } from '../service/hooks';
+import { useAuthStore } from '../../../utils/store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 import { ProgramExplorer } from '../components/ProgramExplorer';
 

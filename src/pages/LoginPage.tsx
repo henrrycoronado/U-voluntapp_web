@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
-import { useThemeStore } from '../store/themeStore';
-import type { LoginRequest } from '../types/auth';
+import { useAuthStore } from '../utils/store/authStore';
+import { useThemeStore } from '../utils/store/themeStore';
+import type { LoginRequest } from '../service/types/auth';
 import { Card, Button, Input, Alert } from '../components';
-import { useForm } from '../hooks/useForm';
-import { authApi } from '../api/auth';
-import { validateForm, validators } from '../utils/validators';
-import { getErrorMessage } from '../utils/errorHandler';
+import { useForm } from '../service/hooks/useForm';
+import { authApi } from '../service/api/auth';
+import { validateForm, validators } from '../utils/validations/validators';
+import { getErrorMessage } from '../utils/exceptions/errorHandler';
 import { Moon, Sun } from 'lucide-react';
 
 export default function LoginPage() {

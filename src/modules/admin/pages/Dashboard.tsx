@@ -1,6 +1,6 @@
-import { Users, Briefcase, Clock, BarChart3 } from 'lucide-react';
-import { useAdminData } from '../api/hooks';
-import { Alert, AnalyticsCard, Card, Button } from '../../../components';
+import { useAdminData } from '../service/hooks';
+import { Alert, Button } from '../../../components';
+import { DashboardStats, AdminActions } from '../components';
 
 export default function Dashboard() {
   const { data, loading, error } = useAdminData();
@@ -21,67 +21,14 @@ export default function Dashboard() {
 
       {error && <Alert type="error" message={error} />}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <AnalyticsCard
-          title="Usuarios Totales"
-          value={loading ? '-' : data?.totalUsers || 0}
-          icon={<Users size={32} />}
-          color="red"
-        />
-        <AnalyticsCard
-          title="Programas Activos"
-          value={loading ? '-' : data?.activePrograms || 0}
-          icon={<Briefcase size={32} />}
-          color="green"
-        />
-        <AnalyticsCard
-          title="Total Horas"
-          value={loading ? '-' : data?.totalHours || 0}
-          icon={<Clock size={32} />}
-          color="yellow"
-        />
-      </div>
+      <DashboardStats
+        totalUsers={data?.totalUsers || 0}
+        activePrograms={data?.activePrograms || 0}
+        totalHours={data?.totalHours || 0}
+        loading={loading}
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Acciones Administrativas
-            </h3>
-          </div>
-          <div className="space-y-3">
-            <Button variant="primary" className="w-full">
-              Gestionar Usuarios
-            </Button>
-            <Button variant="secondary" className="w-full">
-              Revisar Becas
-            </Button>
-            <Button variant="secondary" className="w-full">
-              Requests de Coordinador
-            </Button>
-          </div>
-        </Card>
-
-        <Card>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Análisis del Sistema
-            </h3>
-          </div>
-          <div className="space-y-3">
-            <Button variant="secondary" className="w-full flex items-center gap-2">
-              <BarChart3 size={18} />
-              Ver Reportes
-            </Button>
-            <Button variant="secondary" className="w-full">
-              Exportar Datos
-            </Button>
-            <Button variant="secondary" className="w-full">
-              Auditoría del Sistema
-            </Button>
-          </div>
-        </Card>
-      </div>
+      <AdminActions />
     </div>
   );
 }
