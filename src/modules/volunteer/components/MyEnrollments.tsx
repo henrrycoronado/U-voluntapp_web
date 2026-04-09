@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMyEnrollments } from '../service';
 import { volunteerApi } from '../service';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export const MyEnrollments = () => {
   const { data: enrollments, loading, error } = useMyEnrollments();
@@ -19,7 +20,7 @@ export const MyEnrollments = () => {
       await volunteerApi.cancelMyEnrollment(id);
       // Success - optionally refresh enrollments or show success message
     } catch (err) {
-      setCancelError(err instanceof Error ? err.message : 'Error al cancelar inscripción');
+      setCancelError(getErrorMessage(err));
     } finally {
       setCancelingId(null);
     }

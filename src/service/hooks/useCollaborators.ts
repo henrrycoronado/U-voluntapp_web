@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ProgramCollaborator } from '../api/collaboratorsApi';
 import { collaboratorsApi } from '../api/collaboratorsApi';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 export function useCollaboratorById(id: number) {
   const [data, setData] = useState<ProgramCollaborator | null>(null);
@@ -17,7 +18,7 @@ export function useCollaboratorById(id: number) {
         setData(response.data as ProgramCollaborator);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching collaborator');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -45,7 +46,7 @@ export function useCollaboratorsByProgram(programId: number) {
         setData(response.data as ProgramCollaborator[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching collaborators');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Enrollment } from '../api/enrollmentsApi';
 import { enrollmentsApi } from '../api/enrollmentsApi';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 export function useEnrollmentById(id: number) {
   const [data, setData] = useState<Enrollment | null>(null);
@@ -17,7 +18,7 @@ export function useEnrollmentById(id: number) {
         setData(response.data as Enrollment);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching enrollment');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -45,7 +46,7 @@ export function useEnrollmentsByActivity(activityId: number) {
         setData(response.data as Enrollment[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching enrollments');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -71,7 +72,7 @@ export function useMyEnrollments() {
         setData(response.data as Enrollment[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching enrollments');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

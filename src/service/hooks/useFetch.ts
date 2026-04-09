@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiClient } from '../api/client';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 interface UseFetchOptions {
   enabled?: boolean;
@@ -26,7 +27,7 @@ export function useFetch<T>(url: string, options: UseFetchOptions = {}) {
         setData(response.data.data as T);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching data');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Activity } from '../api/activitiesApi';
 import { activitiesApi } from '../api/activitiesApi';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 export function useActivitiesByProgram(programId: number) {
   const [data, setData] = useState<Activity[] | null>(null);
@@ -17,7 +18,7 @@ export function useActivitiesByProgram(programId: number) {
         setData(response.data as Activity[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching activities');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -45,7 +46,7 @@ export function useActivityById(id: number) {
         setData(response.data as Activity);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching activity');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

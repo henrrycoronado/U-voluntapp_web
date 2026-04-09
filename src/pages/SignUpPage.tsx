@@ -6,6 +6,7 @@ import { Card, Button, Input, Alert } from '../components';
 import { useForm } from '../service/hooks/useForm';
 import { authApi } from '../service/api/auth';
 import { validateForm, validators } from '../utils/validations/validators';
+import { getErrorMessage } from '../utils/exceptions/errorHandler';
 import { Moon, Sun } from 'lucide-react';
 
 export default function SignUpPage() {
@@ -24,12 +25,17 @@ export default function SignUpPage() {
         phone: [[validators.phone, 'Teléfono inválido']],
       }),
     onSubmit: async (vals: Record<string, string>) => {
-      const response = await authApi.register(vals as unknown as RegisterRequest);
-      if (response.success) {
-        setAuth(response.data);
-        navigate('/volunteer');
-      } else {
+      try {
+        const response = await authApi.register(vals as unknown as RegisterRequest);
+        if (response.success) {
+          setAuth(response.data);
+          navigate('/volunteer');
+          return;
+        }
+
         throw new Error(response.message || 'Error al crear cuenta');
+      } catch (error) {
+        throw new Error(getErrorMessage(error));
       }
     },
   });

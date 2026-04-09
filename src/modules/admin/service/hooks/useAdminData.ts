@@ -3,6 +3,7 @@ import type { AxiosResponse } from 'axios';
 import { adminApi } from '../api/adminApi';
 import type { AdminData, ProgramAnalytics, ActivityAnalytics, VolunteerHistory } from '../types';
 import type { ApiResponse } from '../../../../service/types/api';
+import { getErrorMessage } from '../../../../utils/exceptions/errorHandler';
 
 export function useAdminData() {
   const [data, setData] = useState<AdminData | null>(null);
@@ -17,7 +18,7 @@ export function useAdminData() {
         setData((response as unknown as AxiosResponse<ApiResponse<AdminData>>).data.data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching dashboard data');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -43,7 +44,7 @@ export function useProgramAnalytics() {
         setData((response as unknown as AxiosResponse<ApiResponse<ProgramAnalytics[]>>).data.data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching program analytics');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -69,7 +70,7 @@ export function useActivityAnalytics() {
         setData((response as unknown as AxiosResponse<ApiResponse<ActivityAnalytics[]>>).data.data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching activity analytics');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -95,7 +96,7 @@ export function useVolunteerHistory() {
         setData((response as unknown as AxiosResponse<ApiResponse<VolunteerHistory[]>>).data.data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching volunteer history');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { RoleRequest } from '../api/roleRequestsApi';
 import { roleRequestsApi } from '../api/roleRequestsApi';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 export function usePendingCoordinatorRequests() {
   const [data, setData] = useState<RoleRequest[] | null>(null);
@@ -15,7 +16,7 @@ export function usePendingCoordinatorRequests() {
         setData(response.data as RoleRequest[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching pending requests');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -41,7 +42,7 @@ export function usePendingAdminRequests() {
         setData(response.data as RoleRequest[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching pending requests');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

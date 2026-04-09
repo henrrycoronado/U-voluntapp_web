@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMyProfile } from '../service';
 import { volunteerApi } from '../service';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export const ProfileForm = () => {
   const { data: profile, loading, error } = useMyProfile();
@@ -48,7 +49,7 @@ export const ProfileForm = () => {
       await volunteerApi.updateMyProfile(updateData);
       setSuccessMessage('✓ Perfil actualizado con éxito');
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Error al actualizar perfil');
+      setFormError(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }
@@ -68,7 +69,7 @@ export const ProfileForm = () => {
       // Optionally redirect after a delay
       setTimeout(() => (window.location.href = '/login'), 2000);
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Error al eliminar cuenta');
+      setFormError(getErrorMessage(err));
     } finally {
       setSubmitting(false);
     }

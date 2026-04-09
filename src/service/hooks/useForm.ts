@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 export interface ValidationRule {
   validate: (value: unknown) => boolean;
@@ -56,7 +57,7 @@ export function useForm<T extends Record<string, unknown>>({
       try {
         await onSubmit(values);
       } catch (error) {
-        setSubmitError(error instanceof Error ? error.message : 'Error al enviar el formulario');
+        setSubmitError(getErrorMessage(error));
       } finally {
         setIsSubmitting(false);
       }

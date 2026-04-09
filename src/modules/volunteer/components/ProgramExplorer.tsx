@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAvailablePrograms, useActivitiesByProgram } from '../service';
 import { volunteerApi } from '../service';
 import type { Program } from '../service';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export const ProgramExplorer = () => {
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
@@ -28,7 +29,7 @@ export const ProgramExplorer = () => {
       setEnrollError(null);
       // Optionally refresh enrollments or show success message
     } catch (err) {
-      setEnrollError(err instanceof Error ? err.message : 'Error al inscribirse');
+      setEnrollError(getErrorMessage(err));
     } finally {
       setEnrollingId(null);
     }

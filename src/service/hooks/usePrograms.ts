@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Program } from '../api/programsApi';
 import { programsApi } from '../api/programsApi';
+import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 export function usePrograms() {
   const [data, setData] = useState<Program[] | null>(null);
@@ -15,7 +16,7 @@ export function usePrograms() {
         setData(response.data as Program[]);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching programs');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -43,7 +44,7 @@ export function useProgramById(id: number) {
         setData(response.data as Program);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching program');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

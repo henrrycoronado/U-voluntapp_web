@@ -1,5 +1,5 @@
 // Export error handler
-export { getErrorMessage } from './errorHandler';
+export { getErrorMessage, extractErrorMessage } from './errorHandler';
 
 // Export volunteer exceptions
 export {

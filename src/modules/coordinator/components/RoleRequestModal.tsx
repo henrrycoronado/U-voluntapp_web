@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Modal, TextArea, Button, Alert } from '../../../components';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 interface RoleRequestModalProps {
   isOpen: boolean;
@@ -30,7 +31,7 @@ export function RoleRequestModal({ isOpen, onClose, onSubmit, userEmail }: RoleR
     } catch (err) {
       setMessage({
         type: 'error',
-        text: `Error: ${err instanceof Error ? err.message : 'No se pudo enviar la solicitud'}`,
+        text: `Error: ${getErrorMessage(err)}`,
       });
     } finally {
       setSubmitting(false);

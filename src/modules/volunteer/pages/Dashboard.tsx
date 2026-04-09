@@ -5,6 +5,7 @@ import { volunteerApi } from '../service';
 import { useAuthStore } from '../../../utils/store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 import { ProgramExplorer } from '../components/ProgramExplorer';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 // Importamos nuestros nuevos componentes (ahora con la ruta correcta)
 import { ProfileForm } from '../components/ProfileForm';
@@ -40,7 +41,7 @@ export default function Dashboard() {
     } catch (err) {
       setMessage({
         type: 'error',
-        text: `Error: ${err instanceof Error ? err.message : 'No se pudo enviar la solicitud'}`,
+        text: `Error: ${getErrorMessage(err)}`,
       });
     } finally {
       setSubmitting(false);

@@ -1,4 +1,5 @@
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import { getErrorMessage } from './errorHandler';
 
 /**
  * Excepción personalizada para errores relacionados con el módulo de voluntario
@@ -36,63 +37,41 @@ export const handleVolunteerError = (error: unknown): VolunteerException => {
 
   // Si es error de Axios
   if (error && typeof error === 'object' && 'isAxiosError' in error) {
-    const axiosError = error as AxiosError<{
-      message?: string;
-      Message?: string;
-      errors?: string[] | Record<string, string[]>;
-      code?: string;
-    }>;
+    const axiosError = error as AxiosError;
 
     const statusCode = axiosError.response?.status;
-    const data = axiosError.response?.data;
-
-    let message = 'Ocurrió un error inesperado';
+    const message = getErrorMessage(error);
     let code = 'AXIOS_ERROR';
 
     // Manejar diferentes códigos de estado
     switch (statusCode) {
       case 400:
         code = 'VALIDATION_ERROR';
-        if (data?.message) message = data.message;
-        else if (data?.Message) message = data.Message;
-        else if (data?.errors) {
-          if (Array.isArray(data.errors)) {
-            message = data.errors[0];
-          } else {
-            const firstError = Object.values(data.errors)[0];
-            message = Array.isArray(firstError) ? firstError[0] : String(firstError);
-          }
-        }
         break;
 
       case 401:
         code = 'UNAUTHORIZED';
-        message = 'No autenticado. Por favor, inicia sesión nuevamente';
         break;
 
       case 403:
         code = 'FORBIDDEN';
-        message = 'No tienes permiso para realizar esta acción';
         break;
 
       case 404:
         code = 'NOT_FOUND';
-        message = 'El recurso solicitado no fue encontrado';
         break;
 
       case 409:
         code = 'CONFLICT';
-        if (data?.message) message = data.message;
-        else message = 'Conflicto en la operación. Intenta nuevamente';
         break;
 
       case 500:
         code = 'SERVER_ERROR';
-        message = 'Error del servidor. Por favor, intenta más tarde';
         break;
 
-      default:
-        message = axiosError.message || 'Error en la solicitud';
+      case 422:
+        code = 'UNPROCESSABLE_ENTITY';
+        break;
     }
 
     return new VolunteerException(message, code, statusCode, error);

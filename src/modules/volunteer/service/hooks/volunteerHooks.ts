@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { volunteerApi } from '../api/volunteerApi';
 import type { UserProfile, Program, Activity, Enrollment, VolunteerDashboard } from '../types';
 import type { ApiResponse } from '../../../../service/types/api';
+import { getErrorMessage } from '../../../../utils/exceptions/errorHandler';
 
 // Profile hooks
 export function useMyProfile() {
@@ -17,7 +18,7 @@ export function useMyProfile() {
         setData((response as unknown as ApiResponse<UserProfile>).data);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Error fetching profile');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -44,7 +45,7 @@ export function useAvailablePrograms() {
         setData((response as unknown as ApiResponse<Program[]>).data);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Error fetching programs');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -77,7 +78,7 @@ export function useActivitiesByProgram(programId: number | null) {
         setData((response as unknown as ApiResponse<Activity[]>).data);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Error fetching activities');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -104,7 +105,7 @@ export function useMyEnrollments() {
         setData((response as unknown as ApiResponse<Enrollment[]>).data);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Error fetching enrollments');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -136,7 +137,7 @@ export function useEnrollmentById(id: number | null) {
         setData((response as unknown as ApiResponse<Enrollment>).data);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Error fetching enrollment');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -163,7 +164,7 @@ export function useVolunteerDashboard() {
         setData((response as unknown as ApiResponse<VolunteerDashboard>).data);
         setError(null);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'Error fetching dashboard');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);

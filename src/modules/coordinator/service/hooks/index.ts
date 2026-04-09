@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { coordinatorApi } from '../api/coordinatorApi';
 import type { CoordinatorData, Program, Activity, Enrollment } from '../types';
 import type { ApiResponse } from '../../../../service/types/api';
+import { getErrorMessage } from '../../../../utils/exceptions/errorHandler';
 
 export function useCoordinatorData() {
   const [data, setData] = useState<CoordinatorData | null>(null);
@@ -16,7 +17,7 @@ export function useCoordinatorData() {
         setData((response as ApiResponse<CoordinatorData>).data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching dashboard data');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -42,7 +43,7 @@ export function useMyPrograms() {
         setData((response as ApiResponse<Program[]>).data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching programs');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -74,7 +75,7 @@ export function useActivitiesByProgram(programId: number | null) {
         setData((response as ApiResponse<Activity[]>).data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching activities');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
@@ -106,7 +107,7 @@ export function useEnrollmentsByActivity(activityId: number | null) {
         setData((response as ApiResponse<Enrollment[]>).data);
         setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error fetching enrollments');
+        setError(getErrorMessage(err));
         setData(null);
       } finally {
         setLoading(false);
