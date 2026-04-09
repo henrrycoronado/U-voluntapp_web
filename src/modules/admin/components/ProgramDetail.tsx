@@ -3,7 +3,6 @@ import { Plus, ArrowLeft } from 'lucide-react';
 import { Card, Button, Alert } from '../../../components';
 import { activitiesApi } from '../../../service/api';
 import type { Activity, Program } from '../service/types/index';
-import type { AxiosResponse } from 'axios';
 import { CreateActivityModal } from './CreateActivityModal';
 
 interface ProgramDetailProps {
@@ -25,10 +24,8 @@ export function ProgramDetail({ program, onBack }: ProgramDetailProps) {
   const loadActivities = async () => {
     try {
       setLoading(true);
-      const response = (await activitiesApi.getByProgram(program.id)) as AxiosResponse<{
-        data: Activity[];
-      }>;
-      setActivities(response.data?.data || []);
+      const response = await activitiesApi.getByProgram(program.id);
+      setActivities((response.data as unknown as Activity[]) || []);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar actividades');

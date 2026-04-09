@@ -3,7 +3,6 @@ import { Plus } from 'lucide-react';
 import { Card, Button, Alert } from '../../../components';
 import { adminApi } from '../service';
 import type { Program } from '../service/types/index';
-import type { AxiosResponse } from 'axios';
 
 interface ProgramsListProps {
   onSelectProgram?: (program: Program) => void;
@@ -21,8 +20,8 @@ export function ProgramsList({ onSelectProgram }: ProgramsListProps) {
   const loadPrograms = async () => {
     try {
       setLoading(true);
-      const response = (await adminApi.getAllPrograms()) as AxiosResponse<{ data: Program[] }>;
-      setPrograms(response.data?.data || []);
+      const response = await adminApi.getAllPrograms();
+      setPrograms((response.data as unknown as Program[]) || []);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar programas');
