@@ -8,3 +8,12 @@ export {
   validateRoleRequest,
   validateCancelEnrollment,
 } from './volunteerValidators';
+
+// Export coordinator-specific validators
+export {
+  validateProgram,
+  validateActivity,
+  validateAdminRequest,
+  validateEnrollmentReview,
+  validateAddCollaborator,
+} from './coordinatorValidators';

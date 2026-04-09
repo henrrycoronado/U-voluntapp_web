@@ -10,3 +10,14 @@ export {
   ProgramException,
   handleVolunteerError,
 } from './volunteerExceptions';
+
+// Export coordinator exceptions
+export {
+  CoordinatorException,
+  ProgramException as CoordinatorProgramException,
+  ActivityException,
+  CollaboratorException,
+  EnrollmentReviewException,
+  AdminRoleRequestException,
+  handleCoordinatorError,
+} from './coordinatorExceptions';
