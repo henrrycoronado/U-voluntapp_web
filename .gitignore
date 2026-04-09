@@ -1,3 +1,15 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build
+dist/
+dist-ssr/
+build/
+*.local
+
 # Logs
 logs
 *.log
@@ -7,20 +19,30 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Environment
+.env
+.env.local
+.env.*.local
 
-# Editor directories and files
-.vscode/*
+# IDE
+.vscode/
 !.vscode/extensions.json
-.idea
-.DS_Store
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.DS_Store
+.AppleDouble
+.LSOverride
 
-.env
+# Cache
+.cache/
+.eslintcache
+.parcel-cache/
+
+# Temp files
+*.tmp
+*.temp
+.turbo/
