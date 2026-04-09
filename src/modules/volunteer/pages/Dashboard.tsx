@@ -31,7 +31,11 @@ export default function Dashboard() {
     }
     setSubmitting(true);
     try {
-      await volunteerApi.requestCoordinatorRole();
+      await volunteerApi.requestCoordinatorRole({
+        email: user.email,
+        reason: roleRequest.reason.trim(),
+        durationInMonths: roleRequest.months,
+      });
       setMessage({
         type: 'success',
         text: '✓ Solicitud enviada exitosamente. Espera aprobación de un Admin.',
@@ -207,7 +211,10 @@ export default function Dashboard() {
             <input
               type="number"
               value={roleRequest.months}
-              onChange={(e) => setRoleRequest({ ...roleRequest, months: parseInt(e.target.value) })}
+              onChange={(e) => {
+                const parsed = Number.parseInt(e.target.value, 10);
+                setRoleRequest({ ...roleRequest, months: Number.isNaN(parsed) ? 1 : parsed });
+              }}
               min={1}
               max={36}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-blue focus:border-transparent outline-none transition bg-white dark:bg-gray-800 text-gray-900 dark:text-white"

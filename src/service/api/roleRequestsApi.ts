@@ -15,11 +15,15 @@ export interface RoleRequest {
 }
 
 export interface CreateCoordinatorRoleRequest {
-  reason?: string;
+  email: string;
+  reason: string;
+  durationInMonths?: number;
 }
 
 export interface CreateAdminRoleRequest {
-  reason?: string;
+  email: string;
+  reason: string;
+  durationInMonths?: number;
 }
 
 export interface RejectRoleRequestRequest {
@@ -35,11 +39,11 @@ export const roleRequestsApi = {
   getPendingAdmin: () => apiClient.get<ApiResponse<RoleRequest[]>>('/api/v1/roles/requests/admin'),
 
   // Request coordinator role (Volunteer)
-  requestCoordinator: (data: CreateCoordinatorRoleRequest = {}) =>
+  requestCoordinator: (data: CreateCoordinatorRoleRequest) =>
     apiClient.post<ApiResponse<RoleRequest>>('/api/v1/roles/requests/coordinator', data),
 
   // Request admin role (Coordinator, Admin, SuperUser)
-  requestAdmin: (data: CreateAdminRoleRequest = {}) =>
+  requestAdmin: (data: CreateAdminRoleRequest) =>
     apiClient.post<ApiResponse<RoleRequest>>('/api/v1/roles/requests/admin', data),
 
   // Approve coordinator role request (Admin, SuperUser)

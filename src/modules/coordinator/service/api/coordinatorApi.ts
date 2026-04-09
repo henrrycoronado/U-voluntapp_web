@@ -52,7 +52,8 @@ export const coordinatorApi = {
     enrollmentsApi.cancel(enrollmentId, { reason }),
 
   // Role Requests - Request escalation to Admin
-  requestAdminRole: (reason?: string) => roleRequestsApi.requestAdmin({ reason }),
+  requestAdminRole: (payload: { email: string; reason: string; durationInMonths?: number }) =>
+    roleRequestsApi.requestAdmin(payload),
 
   getPendingCoordinatorRequests: () => roleRequestsApi.getPendingCoordinator(),
 

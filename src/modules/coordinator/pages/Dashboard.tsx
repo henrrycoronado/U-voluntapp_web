@@ -12,7 +12,14 @@ export default function Dashboard() {
   const [showRoleModal, setShowRoleModal] = useState(false);
 
   const handleRequestAdmin = async (reason: string) => {
-    await coordinatorApi.requestAdminRole(reason);
+    if (!user?.email) {
+      throw new Error('No se pudo obtener el correo del usuario autenticado.');
+    }
+
+    await coordinatorApi.requestAdminRole({
+      email: user.email,
+      reason: reason.trim(),
+    });
   };
 
   return (

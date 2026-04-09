@@ -41,7 +41,8 @@ export const volunteerApi = {
   cancelMyEnrollment: (id: number, reason?: string) => enrollmentsApi.cancel(id, { reason }),
 
   // Role requests (request to become coordinator)
-  requestCoordinatorRole: (reason?: string) => roleRequestsApi.requestCoordinator({ reason }),
+  requestCoordinatorRole: (payload: { email: string; reason: string; durationInMonths?: number }) =>
+    roleRequestsApi.requestCoordinator(payload),
 
   // Dashboard
   getDashboardData: () => apiClient.get<ApiResponse<VolunteerDashboard>>('/api/v1/programs'),
