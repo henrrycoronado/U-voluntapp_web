@@ -41,9 +41,12 @@ export function CreateActivityModal({
       setLoading(true);
       const payload = {
         programId,
+        activityTypeId: 1, // Workshop
         name: formData.name.trim(),
         startDate: formData.startDate,
         endDate: formData.endDate,
+        requiresEnrollment: true,
+        requiresApproval: false,
       };
       await activitiesApi.createSimple(payload);
 
