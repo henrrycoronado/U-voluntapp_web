@@ -1,9 +1,20 @@
 import { useAdminData } from '../service/hooks';
 import { Alert, Button } from '../../../components';
-import { DashboardStats, AdminActions } from '../components';
+import { DashboardStats, AdminActions, ProgramsList } from '../components';
+import type { Program } from '../types';
 
 export default function Dashboard() {
   const { data, loading, error } = useAdminData();
+
+  const handleEditProgram = (program: Program) => {
+    // TODO: Open program edit modal
+    console.log('Edit program:', program);
+  };
+
+  const handleCreateActivity = (programId: number) => {
+    // TODO: Open activity creation modal
+    console.log('Create activity for program:', programId);
+  };
 
   return (
     <div className="space-y-6">
@@ -27,6 +38,8 @@ export default function Dashboard() {
         totalHours={data?.totalHours || 0}
         loading={loading}
       />
+
+      <ProgramsList onEditProgram={handleEditProgram} onCreateActivity={handleCreateActivity} />
 
       <AdminActions />
     </div>
