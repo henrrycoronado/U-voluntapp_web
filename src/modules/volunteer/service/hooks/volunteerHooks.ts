@@ -14,9 +14,9 @@ export function useMyProfile() {
       try {
         setLoading(true);
         const response = await volunteerApi.getMyProfile();
-        setData((response as ApiResponse<UserProfile>).data);
+        setData((response as unknown as ApiResponse<UserProfile>).data);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error fetching profile');
         setData(null);
       } finally {
@@ -41,9 +41,9 @@ export function useAvailablePrograms() {
       try {
         setLoading(true);
         const response = await volunteerApi.getAllPrograms();
-        setData((response as ApiResponse<Program[]>).data);
+        setData((response as unknown as ApiResponse<Program[]>).data);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error fetching programs');
         setData(null);
       } finally {
@@ -74,9 +74,9 @@ export function useActivitiesByProgram(programId: number | null) {
       try {
         setLoading(true);
         const response = await volunteerApi.getActivitiesByProgram(programId);
-        setData((response as ApiResponse<Activity[]>).data);
+        setData((response as unknown as ApiResponse<Activity[]>).data);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error fetching activities');
         setData(null);
       } finally {
@@ -101,9 +101,9 @@ export function useMyEnrollments() {
       try {
         setLoading(true);
         const response = await volunteerApi.getMyEnrollments();
-        setData((response as ApiResponse<Enrollment[]>).data);
+        setData((response as unknown as ApiResponse<Enrollment[]>).data);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error fetching enrollments');
         setData(null);
       } finally {
@@ -133,9 +133,9 @@ export function useEnrollmentById(id: number | null) {
       try {
         setLoading(true);
         const response = await volunteerApi.getEnrollmentById(id);
-        setData((response as ApiResponse<Enrollment>).data);
+        setData((response as unknown as ApiResponse<Enrollment>).data);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error fetching enrollment');
         setData(null);
       } finally {
@@ -160,9 +160,9 @@ export function useVolunteerDashboard() {
       try {
         setLoading(true);
         const response = await volunteerApi.getDashboardData();
-        setData((response as ApiResponse<VolunteerDashboard>).data);
+        setData((response as unknown as ApiResponse<VolunteerDashboard>).data);
         setError(null);
-      } catch (err) {
+      } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Error fetching dashboard');
         setData(null);
       } finally {

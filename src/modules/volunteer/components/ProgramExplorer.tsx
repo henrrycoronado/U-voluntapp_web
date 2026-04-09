@@ -1,17 +1,38 @@
-import { useProgramExplorer } from '../service/hooks/useProgramExplorer';
+import { useState } from 'react';
+import { useAvailablePrograms, useActivitiesByProgram } from '../service';
+import { volunteerApi } from '../service';
+import type { Program } from '../service';
 
 export const ProgramExplorer = () => {
-  const {
-    programs,
-    selectedProgram,
-    activities,
-    loading,
-    activitiesLoading,
-    error,
-    enrollingId,
-    handleSelectProgram,
-    handleEnroll,
-  } = useProgramExplorer();
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  const [enrollingId, setEnrollingId] = useState<number | null>(null);
+  const [enrollError, setEnrollError] = useState<string | null>(null);
+
+  const { data: programs, loading, error } = useAvailablePrograms();
+  const { data: activities, loading: activitiesLoading } = useActivitiesByProgram(
+    selectedProgram?.id ?? null
+  );
+
+  const handleSelectProgram = (program: Program | null) => {
+    setSelectedProgram(program);
+    setEnrollError(null);
+  };
+
+  const handleEnroll = async (activityId: number) => {
+    if (!selectedProgram) return;
+    setEnrollingId(activityId);
+    setEnrollError(null);
+
+    try {
+      await volunteerApi.enrollInActivity({ activityId });
+      setEnrollError(null);
+      // Optionally refresh enrollments or show success message
+    } catch (err) {
+      setEnrollError(err instanceof Error ? err.message : 'Error al inscribirse');
+    } finally {
+      setEnrollingId(null);
+    }
+  };
 
   if (loading)
     return <div className="p-4 text-gray-500 dark:text-gray-400">Cargando programas...</div>;
@@ -24,13 +45,19 @@ export const ProgramExplorer = () => {
         </div>
       )}
 
+      {enrollError && (
+        <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
+          {enrollError}
+        </div>
+      )}
+
       {!selectedProgram ? (
         <div>
           <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-white">
             Programas Disponibles
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {programs.length === 0 ? (
+            {!programs || programs.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-400">
                 No hay programas activos en este momento.
               </p>
@@ -75,7 +102,7 @@ export const ProgramExplorer = () => {
 
           {activitiesLoading ? (
             <p className="text-gray-500 dark:text-gray-400">Buscando actividades...</p>
-          ) : activities.length === 0 ? (
+          ) : !activities || activities.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-dashed border-gray-300 dark:border-gray-600">
               Aún no hay actividades planificadas para este programa.
             </p>

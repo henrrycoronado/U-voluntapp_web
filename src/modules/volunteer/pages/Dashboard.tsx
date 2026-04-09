@@ -1,7 +1,8 @@
 import { AlertCircle, Award, Clock, Zap, User, ClipboardList } from 'lucide-react';
 import { useState } from 'react';
-import { useVolunteerData, useRequestCoordinatorRole } from '../service/hooks';
-import { useAuthStore } from '../../../utils/store/authStore';
+import { useVolunteerDashboard } from '../service';
+import { volunteerApi } from '../service';
+import { useAuthStore } from '../../../store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 import { ProgramExplorer } from '../components/ProgramExplorer';
 
@@ -10,9 +11,8 @@ import { ProfileForm } from '../components/ProfileForm';
 import { MyEnrollments } from '../components/MyEnrollments';
 
 export default function Dashboard() {
-  const { data, loading, error } = useVolunteerData();
+  const { data, loading, error } = useVolunteerDashboard();
   const { user } = useAuthStore();
-  const requestCoordinator = useRequestCoordinatorRole();
   const [showRoleModal, setShowRoleModal] = useState(false);
   const [roleRequest, setRoleRequest] = useState({ reason: '', months: 12 });
   const [submitting, setSubmitting] = useState(false);
@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [activeSection, setActiveSection] = useState<
     'overview' | 'enrollments' | 'profile' | 'programs'
   >('overview');
+
   const handleRequestCoordinator = async () => {
     if (!roleRequest.reason.trim() || !user?.email) {
       setMessage({ type: 'error', text: 'Por favor explica tu motivo' });
@@ -29,7 +30,7 @@ export default function Dashboard() {
     }
     setSubmitting(true);
     try {
-      await requestCoordinator(user.email, roleRequest.reason, roleRequest.months);
+      await volunteerApi.requestCoordinatorRole();
       setMessage({
         type: 'success',
         text: '✓ Solicitud enviada exitosamente. Espera aprobación de un Admin.',

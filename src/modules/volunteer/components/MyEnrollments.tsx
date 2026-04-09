@@ -1,21 +1,31 @@
-import { useEffect } from 'react';
-import { useEnrollments } from '../service/hooks/useEnrollments';
+import { useState } from 'react';
+import { useMyEnrollments } from '../service';
+import { volunteerApi } from '../service';
 
 export const MyEnrollments = () => {
-  const { enrollments, isLoading, error, loadEnrollments, cancelEnrollment } = useEnrollments();
-
-  useEffect(() => {
-    loadEnrollments();
-  }, [loadEnrollments]);
+  const { data: enrollments, loading, error } = useMyEnrollments();
+  const [cancelingId, setCancelingId] = useState<number | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   const handleCancel = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que deseas cancelar esta inscripción?')) {
-      const success = await cancelEnrollment(id);
-      if (success) alert('Inscripción cancelada exitosamente.');
+    if (!window.confirm('¿Estás seguro de que deseas cancelar esta inscripción?')) {
+      return;
+    }
+
+    setCancelingId(id);
+    setCancelError(null);
+
+    try {
+      await volunteerApi.cancelMyEnrollment(id);
+      // Success - optionally refresh enrollments or show success message
+    } catch (err) {
+      setCancelError(err instanceof Error ? err.message : 'Error al cancelar inscripción');
+    } finally {
+      setCancelingId(null);
     }
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="p-4 text-gray-500 dark:text-gray-400">Cargando tus inscripciones...</div>
     );
@@ -32,6 +42,12 @@ export const MyEnrollments = () => {
       {error && (
         <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
           {error}
+        </div>
+      )}
+
+      {cancelError && (
+        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
+          {cancelError}
         </div>
       )}
 
@@ -89,9 +105,10 @@ export const MyEnrollments = () => {
                     {enrollment.state !== 'Cancelled' && (
                       <button
                         onClick={() => handleCancel(enrollment.id)}
-                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-semibold transition-colors"
+                        disabled={cancelingId === enrollment.id}
+                        className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 font-semibold transition-colors disabled:opacity-50"
                       >
-                        Cancelar
+                        {cancelingId === enrollment.id ? 'Cancelando...' : 'Cancelar'}
                       </button>
                     )}
                   </td>

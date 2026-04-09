@@ -6,7 +6,7 @@ import {
   enrollmentsApi,
   roleRequestsApi,
 } from '../../../../service/api';
-import type { CreateEnrollmentRequest, VolunteerDashboard } from '../types';
+import type { CreateEnrollmentRequest, VolunteerDashboard, UpdateProfileRequest } from '../types';
 import type { ApiResponse } from '../../../../service/types/api';
 
 export const volunteerApi = {

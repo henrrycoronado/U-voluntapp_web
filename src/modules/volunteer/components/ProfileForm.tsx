@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useProfile } from '../service/hooks/useProfile';
+import { useMyProfile } from '../service';
+import { volunteerApi } from '../service';
 
 export const ProfileForm = () => {
-  const { profile, isLoading, error, loadProfile, updateProfile, deleteProfile } = useProfile();
+  const { data: profile, loading, error } = useMyProfile();
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -12,12 +16,7 @@ export const ProfileForm = () => {
   });
 
   useEffect(() => {
-    loadProfile();
-  }, [loadProfile]);
-
-  useEffect(() => {
     if (profile) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         firstName: profile.firstName || '',
         lastName: profile.lastName || '',
@@ -29,22 +28,53 @@ export const ProfileForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormError(null);
+    setSuccessMessage(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await updateProfile(formData);
-    if (success) alert('Perfil actualizado con éxito');
-  };
+    setSubmitting(true);
+    setFormError(null);
+    setSuccessMessage(null);
 
-  const handleDelete = async () => {
-    if (window.confirm('¿Estás seguro de que deseas eliminar tu cuenta permanentemente?')) {
-      const success = await deleteProfile();
-      if (success) alert('Cuenta eliminada. Serás redirigido al inicio.');
+    try {
+      const updateData = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+        housingLocation: formData.housingLocation,
+      };
+      await volunteerApi.updateMyProfile(updateData);
+      setSuccessMessage('✓ Perfil actualizado con éxito');
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Error al actualizar perfil');
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  if (isLoading && !profile)
+  const handleDelete = async () => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar tu cuenta permanentemente?')) {
+      return;
+    }
+
+    setSubmitting(true);
+    setFormError(null);
+
+    try {
+      await volunteerApi.deleteMyAccount();
+      setSuccessMessage('✓ Cuenta eliminada. Serás redirigido al inicio.');
+      // Optionally redirect after a delay
+      setTimeout(() => (window.location.href = '/login'), 2000);
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Error al eliminar cuenta');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading && !profile)
     return <div className="p-4 text-gray-500 dark:text-gray-400">Cargando perfil...</div>;
 
   return (
@@ -54,6 +84,18 @@ export const ProfileForm = () => {
       {error && (
         <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
           {error}
+        </div>
+      )}
+
+      {formError && (
+        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
+          {formError}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-md border border-green-300 dark:border-green-800">
+          {successMessage}
         </div>
       )}
 
@@ -115,18 +157,18 @@ export const ProfileForm = () => {
           <button
             type="button"
             onClick={handleDelete}
-            disabled={isLoading}
-            className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-md font-medium transition-colors"
+            disabled={submitting}
+            className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-md font-medium transition-colors disabled:opacity-50"
           >
-            Eliminar Cuenta
+            {submitting ? 'Procesando...' : 'Eliminar Cuenta'}
           </button>
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={submitting}
             className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-medium transition-colors disabled:opacity-50"
           >
-            {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+            {submitting ? 'Guardando...' : 'Guardar Cambios'}
           </button>
         </div>
       </form>
