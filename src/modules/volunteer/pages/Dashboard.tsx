@@ -2,7 +2,7 @@ import { AlertCircle, Award, Clock, Zap, User, ClipboardList } from 'lucide-reac
 import { useState } from 'react';
 import { useVolunteerDashboard } from '../service';
 import { volunteerApi } from '../service';
-import { useAuthStore } from '../../../store/authStore';
+import { useAuthStore } from '../../../utils/store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
 import { ProgramExplorer } from '../components/ProgramExplorer';
 
@@ -103,20 +103,20 @@ export default function Dashboard() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <AnalyticsCard
-              title="Actividades Inscritas"
-              value={loading ? '-' : data?.enrolledActivities || 0}
+              title="Actividades Completadas"
+              value={loading ? '-' : data?.activitiesCompleted || 0}
               icon={<AlertCircle size={32} />}
               color="blue"
             />
             <AnalyticsCard
-              title="Horas Completadas"
-              value={loading ? '-' : data?.hoursCompleted || 0}
+              title="Horas Servidas"
+              value={loading ? '-' : data?.hoursServed || 0}
               icon={<Clock size={32} />}
               color="green"
             />
             <AnalyticsCard
-              title="Becas Obtenidas"
-              value={loading ? '-' : data?.scholarships || 0}
+              title="Programas Unidos"
+              value={loading ? '-' : data?.programsJoined || 0}
               icon={<Award size={32} />}
               color="yellow"
             />

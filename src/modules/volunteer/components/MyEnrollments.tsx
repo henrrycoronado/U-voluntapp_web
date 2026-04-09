@@ -84,8 +84,8 @@ export const MyEnrollments = () => {
                     {enrollment.activityName || 'Actividad sin nombre'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-500 dark:text-gray-400">
-                    {enrollment.enrollmentDate
-                      ? new Date(enrollment.enrollmentDate).toLocaleDateString()
+                    {enrollment.createdAt
+                      ? new Date(enrollment.createdAt).toLocaleDateString()
                       : 'Sin fecha'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
