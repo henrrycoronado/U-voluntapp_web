@@ -9,6 +9,30 @@ export interface AuthUser {
   roles?: UserRole[];
 }
 
+export interface UserProfile {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  photoUrl?: string;
+  housingLocation?: string;
+  careerId?: number;
+  careerName?: string;
+  personalGoalHours?: number;
+  state: string;
+  createdAt: string;
+}
+
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  housingLocation?: string;
+  careerId?: number;
+  personalGoalHours?: number;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;
