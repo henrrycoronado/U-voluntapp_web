@@ -1,53 +1,91 @@
 import { apiClient } from '../../../../service/api/client';
-import type {
-  AdminData,
-  ProgramAnalytics,
-  ActivityAnalytics,
-  ScholarshipMetrics,
-  VolunteerHistory,
-} from '../types';
+import {
+  programsApi,
+  activitiesApi,
+  enrollmentsApi,
+  roleRequestsApi,
+  collaboratorsApi,
+} from '../../../../service/api';
+import type { AdminData, ProgramAnalytics, ActivityAnalytics, VolunteerHistory } from '../types';
+import type { ApiResponse } from '../../../../service/types/api';
 
 export const adminApi = {
   // Dashboard
-  getDashboardData: () => apiClient.get<AdminData>('/api/v1/reports/programs'),
+  getDashboardData: () => apiClient.get<ApiResponse<AdminData>>('/api/v1/reports/programs'),
 
-  // Programs
-  getAllPrograms: () => apiClient.get('/api/v1/programs'),
-
-  getProgramById: (id: number) => apiClient.get(`/api/v1/programs/${id}`),
-
-  createProgram: (data: Record<string, unknown>) => apiClient.post('/api/v1/programs', data),
-
+  // Programs - CRUD operations
+  getAllPrograms: () => programsApi.getAll(),
+  getProgramById: (id: number) => programsApi.getById(id),
+  createProgram: (data: Record<string, unknown>) =>
+    programsApi.create(data as Parameters<typeof programsApi.create>[0]),
   updateProgram: (id: number, data: Record<string, unknown>) =>
-    apiClient.put(`/api/v1/programs/${id}`, data),
+    programsApi.update(id, data as Parameters<typeof programsApi.update>[1]),
+  deleteProgramById: (id: number) => programsApi.delete(id),
 
-  // Analytics
-  getProgramAnalytics: () => apiClient.get<ProgramAnalytics[]>('/api/v1/reports/programs'),
+  // Programs - State management (SuperUser)
+  changeProgramState: (id: number, stateId: number) => programsApi.changeState(id, { stateId }),
 
-  getActivityAnalytics: () => apiClient.get<ActivityAnalytics[]>('/api/v1/reports/activities'),
+  // Activities - CRUD operations (via global API)
+  getActivityById: (id: number) => activitiesApi.getById(id),
+  getActivitiesByProgram: (programId: number) => activitiesApi.getByProgram(programId),
+  createActivity: (data: Record<string, unknown>) =>
+    activitiesApi.create(data as Parameters<typeof activitiesApi.create>[0]),
+  updateActivity: (id: number, data: Record<string, unknown>) =>
+    activitiesApi.update(id, data as Parameters<typeof activitiesApi.update>[1]),
+  deleteActivity: (id: number) => activitiesApi.delete(id),
+  changeActivityState: (id: number, stateId: number) => activitiesApi.changeState(id, { stateId }),
 
-  getScholarshipAnalytics: () => apiClient.get<ScholarshipMetrics>('/api/v1/reports/scholarships'),
+  // Enrollments - View & Review
+  getEnrollmentById: (id: number) => enrollmentsApi.getById(id),
+  getEnrollmentsByActivity: (activityId: number) => enrollmentsApi.getByActivity(activityId),
+  reviewEnrollment: (enrollmentId: number, approved: boolean) =>
+    enrollmentsApi.review(enrollmentId, { approved }),
 
-  getVolunteerHistory: () => apiClient.get<VolunteerHistory[]>('/api/v1/reports/volunteers'),
+  // Analytics - Reports
+  getProgramAnalytics: () =>
+    apiClient.get<ApiResponse<ProgramAnalytics[]>>('/api/v1/reports/programs'),
 
-  // Role Requests
-  getPendingCoordinatorRequests: () => apiClient.get('/api/v1/roles/requests/coordinator'),
+  getActivityAnalytics: () =>
+    apiClient.get<ApiResponse<ActivityAnalytics[]>>('/api/v1/reports/activities'),
 
-  approveCoordinatorRequest: (id: number) =>
-    apiClient.post(`/api/v1/roles/requests/${id}/coordinator/approve`),
+  getProgramAnalyticsById: (programId: number) =>
+    apiClient.get<ApiResponse<ProgramAnalytics>>(`/api/v1/reports/programs/${programId}`),
 
-  rejectCoordinatorRequest: (id: number) =>
-    apiClient.post(`/api/v1/roles/requests/${id}/coordinator/reject`),
+  getActivityAnalyticsByProgram: (programId: number) =>
+    apiClient.get<ApiResponse<ActivityAnalytics[]>>(
+      `/api/v1/reports/activities/by-program/${programId}`
+    ),
 
-  // Collaborators
+  getVolunteerHistory: () =>
+    apiClient.get<ApiResponse<VolunteerHistory[]>>('/api/v1/reports/volunteers'),
+
+  getVolunteerHistoryById: (profileId: string) =>
+    apiClient.get<ApiResponse<VolunteerHistory>>(`/api/v1/reports/volunteers/${profileId}`),
+
+  // Role Requests - Admin approval workflow
+  getPendingCoordinatorRequests: () => roleRequestsApi.getPendingCoordinator(),
+
+  getPendingAdminRequests: () => roleRequestsApi.getPendingAdmin(),
+
+  approveCoordinatorRequest: (id: number) => roleRequestsApi.approveCoordinator(id),
+
+  rejectCoordinatorRequest: (id: number, reason?: string) =>
+    roleRequestsApi.rejectCoordinator(id, { reason }),
+
+  approveAdminRequest: (id: number) => roleRequestsApi.approveAdmin(id),
+
+  rejectAdminRequest: (id: number, reason?: string) => roleRequestsApi.rejectAdmin(id, { reason }),
+
+  // Program Collaborators - Team management
+  getCollaboratorsByProgram: (programId: number) => collaboratorsApi.getByProgram(programId),
+
+  getCollaboratorById: (id: number) => collaboratorsApi.getById(id),
+
   addProgramCollaborator: (data: Record<string, unknown>) =>
-    apiClient.post('/api/v1/collaborators', data),
+    collaboratorsApi.create(data as Parameters<typeof collaboratorsApi.create>[0]),
 
-  getCollaboratorsByProgram: (programId: number) =>
-    apiClient.get(`/api/v1/collaborators/program/${programId}`),
+  updateCollaborator: (id: number, accessLevel: number) =>
+    collaboratorsApi.update(id, { accessLevel }),
 
-  updateCollaborator: (id: number, data: Record<string, unknown>) =>
-    apiClient.put(`/api/v1/collaborators/${id}`, data),
-
-  removeCollaborator: (id: number) => apiClient.delete(`/api/v1/collaborators/${id}`),
+  removeCollaborator: (id: number) => collaboratorsApi.delete(id),
 };

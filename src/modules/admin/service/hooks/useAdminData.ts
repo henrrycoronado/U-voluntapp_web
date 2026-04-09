@@ -1,7 +1,108 @@
-import { useFetch } from '../../../../service/hooks/useFetch';
+import { useEffect, useState } from 'react';
 import { adminApi } from '../api/adminApi';
-import type { AdminData } from '../types';
+import type { AdminData, ProgramAnalytics, ActivityAnalytics, VolunteerHistory } from '../types';
+import type { ApiResponse } from '../../../../service/types/api';
 
 export function useAdminData() {
-  return useFetch<AdminData>(() => adminApi.getDashboardData());
+  const [data, setData] = useState<AdminData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await adminApi.getDashboardData();
+        setData((response as ApiResponse<AdminData>).data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching dashboard data');
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return { data, loading, error };
+}
+
+export function useProgramAnalytics() {
+  const [data, setData] = useState<ProgramAnalytics[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await adminApi.getProgramAnalytics();
+        setData((response as ApiResponse<ProgramAnalytics[]>).data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching program analytics');
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return { data, loading, error };
+}
+
+export function useActivityAnalytics() {
+  const [data, setData] = useState<ActivityAnalytics[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await adminApi.getActivityAnalytics();
+        setData((response as ApiResponse<ActivityAnalytics[]>).data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching activity analytics');
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return { data, loading, error };
+}
+
+export function useVolunteerHistory() {
+  const [data, setData] = useState<VolunteerHistory[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await adminApi.getVolunteerHistory();
+        setData((response as ApiResponse<VolunteerHistory[]>).data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Error fetching volunteer history');
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return { data, loading, error };
 }
