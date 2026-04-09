@@ -4,6 +4,7 @@ import { useVolunteerData } from '../api/hooks';
 import { useRequestCoordinatorRole } from '../hooks/hooks';
 import { useAuthStore } from '../../../store/authStore';
 import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
+import { ProgramExplorer } from '../components/ProgramExplorer';
 
 // Importamos nuestros nuevos componentes (ahora con la ruta correcta)
 import { ProfileForm } from '../components/ProfileForm';
@@ -19,10 +20,9 @@ export default function Dashboard() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   // Estados simples para mostrar/ocultar nuestras nuevas secciones
-  const [activeSection, setActiveSection] = useState<'overview' | 'enrollments' | 'profile'>(
-    'overview'
-  );
-
+  const [activeSection, setActiveSection] = useState<
+    'overview' | 'enrollments' | 'profile' | 'programs'
+  >('overview');
   const handleRequestCoordinator = async () => {
     if (!roleRequest.reason.trim() || !user?.email) {
       setMessage({ type: 'error', text: 'Por favor explica tu motivo' });
@@ -78,6 +78,14 @@ export default function Dashboard() {
             <User size={16} /> Mi Perfil
           </Button>
           <Button
+            variant={activeSection === 'programs' ? 'primary' : 'secondary'}
+            size="sm"
+            onClick={() => setActiveSection('programs')}
+            className="flex items-center gap-2"
+          >
+            <Zap size={16} /> Programas
+          </Button>
+          <Button
             variant="success"
             size="sm"
             onClick={() => setShowRoleModal(true)}
@@ -122,7 +130,11 @@ export default function Dashboard() {
                 </h3>
               </div>
               <div className="space-y-3">
-                <Button variant="primary" className="w-full">
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  onClick={() => setActiveSection('programs')}
+                >
                   Explorar Programas
                 </Button>
                 <Button variant="secondary" className="w-full">
@@ -161,6 +173,13 @@ export default function Dashboard() {
           <div className="w-full max-w-3xl">
             <ProfileForm />
           </div>
+        </div>
+      )}
+
+      {/* SECCIÓN 4: EXPLORAR PROGRAMAS */}
+      {activeSection === 'programs' && (
+        <div className="mt-6">
+          <ProgramExplorer />
         </div>
       )}
 
