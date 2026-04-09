@@ -1,6 +1,7 @@
 import { Shield } from 'lucide-react';
 import { useState } from 'react';
-import { useCoordinatorData, useRequestAdminRole } from '../service/hooks';
+import { useCoordinatorData } from '../service/hooks';
+import { coordinatorApi } from '../service/api/coordinatorApi';
 import { useAuthStore } from '../../../utils/store/authStore';
 import { Alert, Button } from '../../../components';
 import { CoordinatorStats, CoordinatorQuickActions, RoleRequestModal } from '../components';
@@ -8,8 +9,11 @@ import { CoordinatorStats, CoordinatorQuickActions, RoleRequestModal } from '../
 export default function Dashboard() {
   const { data, loading, error } = useCoordinatorData();
   const { user } = useAuthStore();
-  const requestAdmin = useRequestAdminRole();
   const [showRoleModal, setShowRoleModal] = useState(false);
+
+  const handleRequestAdmin = async (reason: string) => {
+    await coordinatorApi.requestAdminRole(reason);
+  };
 
   return (
     <div className="space-y-6">
@@ -47,9 +51,7 @@ export default function Dashboard() {
       <RoleRequestModal
         isOpen={showRoleModal}
         onClose={() => setShowRoleModal(false)}
-        onSubmit={async (reason) => {
-          await requestAdmin(user?.email || '', reason);
-        }}
+        onSubmit={handleRequestAdmin}
         userEmail={user?.email}
       />
     </div>
