@@ -1,4 +1,5 @@
-export interface ProfileResponse {
+// User profile types
+export interface UserProfile {
   id: string;
   firstName: string;
   lastName: string;
@@ -8,7 +9,7 @@ export interface ProfileResponse {
   housingLocation?: string;
   careerId?: number;
   careerName?: string;
-  personalGoalHours: number;
+  personalGoalHours?: number;
   state: string;
   createdAt: string;
 }
@@ -22,31 +23,67 @@ export interface UpdateProfileRequest {
   personalGoalHours?: number;
 }
 
-export interface ActivityResponse {
+// Program types
+export interface Program {
+  id: number;
+  name: string;
+  description?: string;
+  acronym?: string;
+  color?: string;
+  state: string;
+  managerProfileId: string;
+  createdAt: string;
+}
+
+// Activity types
+export interface Activity {
   id: number;
   programId: number;
   name: string;
-  description: string;
-  date: string;
-  totalHours: number;
+  description?: string;
+  startDate: string;
+  endDate: string;
   state: string;
+  capacity?: number;
+  enrolled?: number;
+  requiresApproval: boolean;
+  locationLatitude?: number;
+  locationLongitude?: number;
+  createdAt: string;
 }
 
-export interface EnrollmentResponse {
+// Enrollment types
+export interface Enrollment {
   id: number;
-  volunteerId: string;
   activityId: number;
   activityName: string;
-  enrollmentDate: string;
+  programId: number;
+  programName: string;
+  enrolledProfileId: string;
   state: string;
-  pointsEarned: number;
+  createdAt: string;
 }
 
-export interface ProgramResponse {
+export interface CreateEnrollmentRequest {
+  activityId: number;
+}
+
+// Role Request types
+export interface RoleRequest {
   id: number;
-  name: string;
-  description: string;
-  startDate?: string;
-  endDate?: string;
+  requestingProfileId: string;
+  requestingProfileName: string;
+  requestedRole: 'Coordinator';
   state: string;
+  reason?: string;
+  createdAt: string;
+}
+
+// Dashboard types
+export interface VolunteerDashboard {
+  hoursServed: number;
+  programsJoined: number;
+  activitiesCompleted: number;
+  upcomingActivities: Activity[];
+  myEnrollments: Enrollment[];
 }
