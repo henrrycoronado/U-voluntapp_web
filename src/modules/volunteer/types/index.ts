@@ -41,3 +41,12 @@ export interface EnrollmentResponse {
   state: string;
   pointsEarned: number;
 }
+
+export interface ProgramResponse {
+  id: number;
+  name: string;
+  description: string;
+  startDate?: string;
+  endDate?: string;
+  state: string;
+}
