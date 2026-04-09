@@ -1,55 +1,262 @@
-# U-Voluntapp - Frontend
+# U-Voluntapp Web - Frontend
 
-## Descripción del proyecto
-U-Voluntapp es una aplicación cliente (frontend) de un sistema integral diseñado para la gestión y conexión entre voluntarios y programas de voluntariado. Su propósito es facilitar la administración de actividades, el registro de usuarios y la asignación de roles mediante una interfaz moderna, escalable y centrada en la experiencia del usuario.
+## Descripción
+Aplicación frontend moderna para gestión de programas y actividades de voluntariado. Permite a voluntarios, coordinadores y administradores colaborar de manera eficiente en iniciativas de impacto social.
 
-## Tecnologías utilizadas
-El proyecto fue construido utilizando un ecosistema basado en React, priorizando el tipado estricto y la gestión eficiente del estado y las peticiones de red.
+## Stack Tecnológico
+- **React 18** con TypeScript para tipado estricto
+- **Vite** como empaquetador ultrarrápido
+- **React Router DOM** para enrutamiento SPA
+- **Zustand** para estado global persistente
+- **Axios** para peticiones HTTP
+- **Tailwind CSS** para estilos
+- **Lucide React** para iconografía
 
-* Librería principal: React 18
-* Lenguaje: TypeScript
-* Empaquetador: Vite
-* Enrutamiento: React Router DOM
-* Gestión del estado global: Zustand (con middleware de persistencia)
-* Gestión de peticiones: TanStack Query (React Query)
-* Estilos: CSS puro bajo la metodología BEM
-* Iconografía: Lucide React
-* Simulación de base de datos: JSON Server
+## Arquitectura
 
-## Arquitectura y estructura
-El proyecto sigue una arquitectura orientada a funcionalidades (Feature-Driven), lo que permite escalar el código encapsulando la lógica, las vistas y las llamadas a la API dentro de sus respectivos dominios.
+```
+src/
+├── service/              # Capa global de servicios
+│   ├── api/             # Cliente HTTP (apiClient, auth)
+│   ├── hooks/           # Hooks reutilizables (useFetch, useForm)
+│   └── types/           # Tipos globales
+├── modules/             # Módulos por rol
+│   ├── admin/
+│   ├── coordinator/
+│   └── volunteer/
+├── utils/               # Utilidades transversales
+│   ├── exceptions/      # Manejo de errores
+│   ├── validations/     # Validaciones
+│   ├── store/           # Zustand stores
+│   └── router/          # Route guards
+├── components/          # Componentes compartidos
+└── pages/               # Páginas globales (Auth)
+```
 
-* src/features/: Contiene los módulos principales de la aplicación divididos por dominio de negocio.
-* src/store/: Contiene los manejadores de estado global.
-* src/components/: Componentes compartidos y centralizados.
-* src/assets/: Recursos estáticos.
+### Patrón de Módulos
+Cada módulo (admin, coordinator, volunteer) contiene:
+```
+module/
+├── service/
+│   ├── api/            # Definiciones de endpoints
+│   ├── types/          # Tipos TypeScript del módulo
+│   └── hooks/          # Hooks de data fetching
+├── components/         # Componentes reutilizables
+└── pages/             # Páginas del módulo
+```
 
-## Hitos de evaluación (Semana 4 y 5)
-El proyecto cumple rigurosamente con los requerimientos técnicos establecidos en la rúbrica académica:
+## Instalación
 
-**Semana 4:**
-* Rutas protegidas implementadas: Se utiliza un componente contenedor que verifica la sesión activa en el estado global y redirige al login si el usuario no cuenta con autorización o el rol adecuado.
-* Hooks y stores reutilizables: Extracción de la lógica de peticiones en hooks personalizados (usePrograms) y centralización de la sesión mediante Zustand (useAuthStore).
-* Manejo de estados de carga y error: Control estricto de las variables de estado asíncrono en las vistas principales.
+### Requisitos
+- Node.js 18+ 
+- npm o pnpm
 
-**Semana 5:**
-* Conexión a API simulada: El frontend consume operaciones reales de red hacia un servidor local levantado con JSON Server, cumpliendo con la cuota de endpoints funcionales.
-* Configuración de TanStack Query: Implementado como cliente HTTP principal para optimizar el data fetching y la caché.
-* Skeletons de carga: Creación e implementación de un componente reutilizable y centralizado (SkeletonList) para mostrar animaciones de carga estructurales mientras se resuelven las peticiones de red.
-* Manejo de errores visuales: Captura y renderizado de mensajes de error directamente en la interfaz de usuario en caso de fallos de conexión.
-* Mutaciones con invalidación de caché: Implementación de operaciones de creación y eliminación que ejecutan la invalidación de las consultas activas, actualizando la interfaz en tiempo real sin recargar el navegador.
+### Pasos
 
-## Instrucciones de instalación y ejecución
-Para ejecutar este proyecto en un entorno local, se requiere tener Node.js instalado.
+1. **Clonar repositorio**
+   ```bash
+   git clone https://github.com/henrrycoronado/U-voluntapp.git
+   cd U-voluntapp/U-voluntapp_web
+   ```
 
-1. Clonar el repositorio en la máquina local.
-2. Abrir una terminal en el directorio raíz del proyecto.
-3. Instalar todas las dependencias ejecutando el comando:
-   **`npm install`**
-4. En la misma terminal, iniciar el servidor de desarrollo:
-   **`npm run dev`**
-5. Abrir una nueva terminal (manteniendo la anterior abierta) e iniciar el servidor de base de datos simulada:
-   **`npx json-server --watch db.json --port 3000`**
+2. **Instalar dependencias**
+   ```bash
+   npm install
+   # o
+   pnpm install
+   ```
 
-## Estado de integración
-Actualmente, el frontend opera de manera autónoma utilizando JSON Server. El manejo de estado global ha sido tipado y estructurado para recibir el objeto de transferencia de datos (DTO) proveniente de la integración inminente con la API RESTful construida en .NET.
+3. **Configurar variables de entorno**
+   - Copiar `.env.example` a `.env.local` (si existe)
+   - Configurar `VITE_API_BASE_URL` pointing to backend (default: `http://localhost:5000`)
+
+   ```bash
+   echo "VITE_API_BASE_URL=http://localhost:5000" > .env.local
+   ```
+
+4. **Iniciar servidor de desarrollo**
+   ```bash
+   npm run dev
+   # Abrirá http://localhost:5173
+   ```
+
+5. **Build para producción**
+   ```bash
+   npm run build
+   npm run preview  # Preview del build
+   ```
+
+## Desarrollo
+
+### Comandos Disponibles
+```bash
+npm run dev       # Servidor desarrollo (Vite)
+npm run build     # Build optimizado
+npm run preview   # Preview del build
+npm run lint      # ESLint check
+npm run lint:fix  # ESLint auto-fix
+```
+
+### Estructura de Commits
+```
+feat: nueva funcionalidad
+fix: corrección de bug
+refactor: reorganización sin cambios funcionales
+chore: tareas administrativas
+docs: documentación
+```
+
+## Flujo de Autenticación
+
+1. **Login**: POST `/api/v1/auth/login` → JWT + User profile
+2. **Persistencia**: Token almacenado en Zustand (authStore)
+3. **Protección**: ProtectedRoute verifica token y rol
+4. **Auto-logout**: Token expirado dispara redirect a login
+
+## API Endpoints
+
+Base: `http://localhost:5000/api/v1/`
+
+### Públicos (Sin Auth)
+- `POST /auth/register` - Registro
+- `POST /auth/login` - Login
+- `POST /auth/logout` - Logout
+
+### Autenticados
+- `GET /profiles/me` - Perfil del usuario
+- `GET /programs` - Listar programas (filtrado por rol)
+- `GET /activities/by-program/{id}` - Actividades de programa
+- `GET /enrollments/mine` - Mis inscripciones
+- `POST /enrollments` - Inscribirse en actividad
+- `PATCH /enrollments/{id}/review` - Revisar inscripción (Coordinador/Admin)
+- Y más según rol...
+
+Documentación completa en [API_ENDPOINTS_ANALYSIS.md](/memories/repo/API_ENDPOINTS_ANALYSIS.md)
+
+## Roles y Permisos
+
+### Voluntario
+- Navegar programas y actividades
+- Inscribirse en actividades
+- Gestionar su perfil
+- Solicitar rol de coordinador
+
+### Coordinador
+- Crear/editar programas y actividades
+- Revisar inscripciones de voluntarios
+- Generar reportes básicos
+- Solicitar rol de administrador
+
+### Administrador
+- Aprobar/rechazar solicitudes de rol
+- Acceso a reportes avanzados
+- Gestionar todos los programas y actividades
+- Administrar usuarios
+
+## Desarrollo de Nuevas Funcionalidades
+
+### Crear un Hook de Data Fetching
+```typescript
+// module/service/hooks/useMyData.ts
+import { useFetch } from '../../../../service/hooks/useFetch';
+import { moduleApi } from '../api/moduleApi';
+
+export function useMyData() {
+  return useFetch(() => moduleApi.getMyData());
+}
+```
+
+### Crear un Endpoint API
+```typescript
+// module/service/api/moduleApi.ts
+export const moduleApi = {
+  getMyData: () => 
+    apiClient.get<MyDataType>('/api/v1/endpoint'),
+};
+```
+
+### Crear un Componente Reutilizable
+```typescript
+// module/components/MyComponent.tsx
+import { Card, Button, Input } from '../../../components';
+
+interface MyComponentProps {
+  data: any;
+  onSubmit: (value: any) => void;
+}
+
+export function MyComponent({ data, onSubmit }: MyComponentProps) {
+  return (
+    <Card>
+      {/* Componente JSX */}
+    </Card>
+  );
+}
+```
+
+## Troubleshooting
+
+### "Module not found" imports
+- Verificar rutas relativas con escalas correctas `../../../service/`
+- Usar barrel exports (`index.ts`) para simplificar imports
+
+### CORS errors
+- Backend debe estar corriendo en puerto 5000
+- Verificar CORS settings en backend
+
+### Token expirado
+- Login automático redirige a `/login`
+- Revisar localStorage para token persistencia
+
+## Estructura de Estado Global
+
+### authStore (Zustand)
+```typescript
+{
+  user: UserProfile | null
+  token: string | null
+  isAuthenticated: boolean
+  role: 'volunteer' | 'coordinator' | 'admin'
+  setUser: (user: UserProfile) => void
+  logout: () => void
+}
+```
+
+### themeStore (Zustand)
+```typescript
+{
+  isDark: boolean
+  toggle: () => void
+}
+```
+
+## Performance
+
+- **Lazy loading** de módulos por ruta
+- **Code splitting** automático con Vite
+- **Memoization** de componentes en listas
+- **Request deduplication** con hooks reutilizables
+
+## Contribución
+
+1. Crear rama desde `develop`: `git checkout -b feature/tu-feature`
+2. Hacer commits atómicos
+3. Push a rama
+4. Crear Pull Request a `develop`
+5. Esperar review
+
+## Roadmap
+
+- [ ] Componentes adicionales (DataGrid, DatePicker, etc.)
+- [ ] Temas dinámicos avanzados
+- [ ] Notificaciones en tiempo real
+- [ ] Offline support
+- [ ] PWA capabilities
+
+## Licencia
+
+MIT
+
+## Contacto
+
+Equipo de desarrollo: [tu-email@example.com]
