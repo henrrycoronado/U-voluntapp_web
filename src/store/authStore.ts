@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { AuthUser, UserRole } from '../types/auth';
+import { authApi } from '../api/auth';
 
 function parseRolesFromToken(token: string): UserRole[] {
   try {
@@ -26,7 +27,7 @@ interface AuthStore {
   token: string | null;
   isAuthenticated: boolean;
   setAuth: (user: AuthUser) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   hasRole: (role: UserRole) => boolean;
   hasAnyRole: (roles: UserRole[]) => boolean;
 }
@@ -51,7 +52,20 @@ export const useAuthStore = create<AuthStore>()(
         });
       },
 
-      logout: () => {
+      logout: async () => {
+        const { user } = get();
+
+        const currentUser = user as unknown as { id?: string; email?: string };
+        const userId = currentUser?.id || currentUser?.email || '';
+
+        if (userId) {
+          try {
+            await authApi.logout(userId);
+          } catch (error) {
+            console.error('Error al cerrar sesión en el servidor:', error);
+          }
+        }
+
         set({
           user: null,
           token: null,

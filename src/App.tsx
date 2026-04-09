@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { useAuthStore } from './store/authStore';
 import { ProtectedRoute } from './router/ProtectedRoute';
+import { PublicRoute } from './router/PublicRoute'; // <--- IMPORTAMOS TU NUEVA BARRERA
 
 import RootLayout from './layout/RootLayout';
 import AppLayout from './layout/AppLayout';
@@ -34,10 +35,16 @@ function App() {
       <Routes>
         <Route element={<RootLayout />}>
           <Route path="/" element={<HomeRedirect />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
+
+          {/* 1. RUTAS PÚBLICAS: La barrera impide entrar aquí si ya tienes sesión */}
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+          </Route>
+
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
+          {/* 2. RUTAS PROTEGIDAS: La barrera impide entrar si NO tienes sesión */}
           <Route
             element={
               <ProtectedRoute>
