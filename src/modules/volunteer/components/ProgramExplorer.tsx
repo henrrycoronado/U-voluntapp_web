@@ -1,4 +1,4 @@
-import { useProgramExplorer } from '../hooks/useProgramExplorer';
+import { useProgramExplorer } from '../service/hooks/useProgramExplorer';
 
 export const ProgramExplorer = () => {
   const {

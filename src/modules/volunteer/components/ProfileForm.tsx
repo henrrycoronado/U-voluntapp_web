@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useProfile } from '../hooks/useProfile';
+import { useProfile } from '../service/hooks/useProfile';
 
 export const ProfileForm = () => {
   const { profile, isLoading, error, loadProfile, updateProfile, deleteProfile } = useProfile();

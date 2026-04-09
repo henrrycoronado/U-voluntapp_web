@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useEnrollments } from '../hooks/useEnrollments';
+import { useEnrollments } from '../service/hooks/useEnrollments';
 
 export const MyEnrollments = () => {
   const { enrollments, isLoading, error, loadEnrollments, cancelEnrollment } = useEnrollments();

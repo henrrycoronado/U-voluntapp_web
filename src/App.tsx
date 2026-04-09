@@ -1,10 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { useAuthStore } from './store/authStore';
-import { ProtectedRoute } from './router/ProtectedRoute';
-import { PublicRoute } from './router/PublicRoute'; // <--- IMPORTAMOS TU NUEVA BARRERA
+import { useAuthStore } from './utils/store/authStore';
+import { ProtectedRoute } from './utils/router/ProtectedRoute';
+import { PublicRoute } from './utils/router/PublicRoute'; // <--- IMPORTAMOS TU NUEVA BARRERA
 
-import RootLayout from './layout/RootLayout';
-import AppLayout from './layout/AppLayout';
+import RootLayout from './components/layout/RootLayout';
+import AppLayout from './components/layout/AppLayout';
 
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
