@@ -17,3 +17,13 @@ export {
   validateEnrollmentReview,
   validateAddCollaborator,
 } from './coordinatorValidators';
+
+// Export admin-specific validators
+export {
+  validateProgramManagement,
+  validateActivityManagement,
+  validateProgramStateChange,
+  validateActivityStateChange,
+  validateRoleRequestReview,
+  validateCollaboratorManagement,
+} from './adminValidators';

@@ -21,3 +21,14 @@ export {
   AdminRoleRequestException,
   handleCoordinatorError,
 } from './coordinatorExceptions';
+
+// Export admin exceptions
+export {
+  AdminException,
+  ProgramManagementException,
+  ActivityManagementException,
+  RoleRequestReviewException,
+  CollaboratorManagementException,
+  AnalyticsException,
+  handleAdminError,
+} from './adminExceptions';
