@@ -48,13 +48,13 @@ export interface CreateActivityRequest {
 }
 
 export interface CreateActivitySimpleRequest {
-  programId: number;
-  activityTypeId: number;
-  name: string;
-  startDate: string;
-  endDate: string;
-  requiresEnrollment: boolean;
-  requiresApproval: boolean;
+  ProgramId: number;
+  ActivityTypeId: number;
+  Name: string;
+  StartDate: string;
+  EndDate: string;
+  RequiresEnrollment: boolean;
+  RequiresApproval: boolean;
 }
 
 export interface ChangeActivityStateRequest {

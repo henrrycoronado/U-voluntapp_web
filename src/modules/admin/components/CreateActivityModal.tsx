@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AxiosError } from 'axios';
 import { Modal, Button, Alert } from '../../../components';
 import { activitiesApi } from '../../../service/api';
 
@@ -39,21 +40,47 @@ export function CreateActivityModal({
 
     try {
       setLoading(true);
+
+      // Convert datetime-local format to ISO 8601
+      const startDate = new Date(formData.startDate).toISOString();
+      const endDate = new Date(formData.endDate).toISOString();
+
+      console.log('Sending payload:', {
+        ProgramId: programId,
+        ActivityTypeId: 1,
+        Name: formData.name.trim(),
+        StartDate: startDate,
+        EndDate: endDate,
+        RequiresEnrollment: true,
+        RequiresApproval: false,
+      });
+
       const payload = {
-        programId,
-        activityTypeId: 1, // Workshop
-        name: formData.name.trim(),
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        requiresEnrollment: true,
-        requiresApproval: false,
+        ProgramId: programId,
+        ActivityTypeId: 1,
+        Name: formData.name.trim(),
+        StartDate: startDate,
+        EndDate: endDate,
+        RequiresEnrollment: true,
+        RequiresApproval: false,
       };
       await activitiesApi.createSimple(payload);
 
       setFormData({ name: '', startDate: '', endDate: '' });
       onActivityCreated?.();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al crear la actividad');
+    } catch (error: unknown) {
+      console.error('Error creating activity:', error);
+      let errorMessage = 'Error al crear la actividad';
+      if (error instanceof AxiosError) {
+        errorMessage =
+          error.response?.data?.message ||
+          error.response?.data?.error ||
+          error.message ||
+          errorMessage;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setError(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
     } finally {
       setLoading(false);
     }
