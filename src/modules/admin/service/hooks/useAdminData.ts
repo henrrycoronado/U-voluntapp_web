@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import type { AxiosResponse } from 'axios';
 import { adminApi } from '../api/adminApi';
 import type { AdminData, ProgramAnalytics, ActivityAnalytics, VolunteerHistory } from '../types';
 import type { ApiResponse } from '../../../../service/types/api';
@@ -13,7 +14,7 @@ export function useAdminData() {
       try {
         setLoading(true);
         const response = await adminApi.getDashboardData();
-        setData((response as ApiResponse<AdminData>).data);
+        setData((response as unknown as AxiosResponse<ApiResponse<AdminData>>).data.data);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error fetching dashboard data');
@@ -39,7 +40,7 @@ export function useProgramAnalytics() {
       try {
         setLoading(true);
         const response = await adminApi.getProgramAnalytics();
-        setData((response as ApiResponse<ProgramAnalytics[]>).data);
+        setData((response as unknown as AxiosResponse<ApiResponse<ProgramAnalytics[]>>).data.data);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error fetching program analytics');
@@ -65,7 +66,7 @@ export function useActivityAnalytics() {
       try {
         setLoading(true);
         const response = await adminApi.getActivityAnalytics();
-        setData((response as ApiResponse<ActivityAnalytics[]>).data);
+        setData((response as unknown as AxiosResponse<ApiResponse<ActivityAnalytics[]>>).data.data);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error fetching activity analytics');
@@ -91,7 +92,7 @@ export function useVolunteerHistory() {
       try {
         setLoading(true);
         const response = await adminApi.getVolunteerHistory();
-        setData((response as ApiResponse<VolunteerHistory[]>).data);
+        setData((response as unknown as AxiosResponse<ApiResponse<VolunteerHistory[]>>).data.data);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Error fetching volunteer history');

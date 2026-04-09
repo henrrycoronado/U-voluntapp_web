@@ -17,9 +17,9 @@ export const adminApi = {
   getAllPrograms: () => programsApi.getAll(),
   getProgramById: (id: number) => programsApi.getById(id),
   createProgram: (data: Record<string, unknown>) =>
-    programsApi.create(data as Parameters<typeof programsApi.create>[0]),
+    programsApi.create(data as unknown as Parameters<typeof programsApi.create>[0]),
   updateProgram: (id: number, data: Record<string, unknown>) =>
-    programsApi.update(id, data as Parameters<typeof programsApi.update>[1]),
+    programsApi.update(id, data as unknown as Parameters<typeof programsApi.update>[1]),
   deleteProgramById: (id: number) => programsApi.delete(id),
 
   // Programs - State management (SuperUser)
@@ -29,9 +29,9 @@ export const adminApi = {
   getActivityById: (id: number) => activitiesApi.getById(id),
   getActivitiesByProgram: (programId: number) => activitiesApi.getByProgram(programId),
   createActivity: (data: Record<string, unknown>) =>
-    activitiesApi.create(data as Parameters<typeof activitiesApi.create>[0]),
+    activitiesApi.create(data as unknown as Parameters<typeof activitiesApi.create>[0]),
   updateActivity: (id: number, data: Record<string, unknown>) =>
-    activitiesApi.update(id, data as Parameters<typeof activitiesApi.update>[1]),
+    activitiesApi.update(id, data as unknown as Parameters<typeof activitiesApi.update>[1]),
   deleteActivity: (id: number) => activitiesApi.delete(id),
   changeActivityState: (id: number, stateId: number) => activitiesApi.changeState(id, { stateId }),
 
@@ -82,7 +82,7 @@ export const adminApi = {
   getCollaboratorById: (id: number) => collaboratorsApi.getById(id),
 
   addProgramCollaborator: (data: Record<string, unknown>) =>
-    collaboratorsApi.create(data as Parameters<typeof collaboratorsApi.create>[0]),
+    collaboratorsApi.create(data as unknown as Parameters<typeof collaboratorsApi.create>[0]),
 
   updateCollaborator: (id: number, accessLevel: number) =>
     collaboratorsApi.update(id, { accessLevel }),
