@@ -1,47 +1,55 @@
+import { useState } from 'react';
 import { useAdminData } from '../service/hooks';
 import { Alert, Button } from '../../../components';
-import { DashboardStats, AdminActions, ProgramsList } from '../components';
-import type { Program } from '../types';
+import { DashboardStats, AdminActions, ProgramsList, ProgramDetail } from '../components';
+import type { Program } from '../service/types/index';
 
 export default function Dashboard() {
   const { data, loading, error } = useAdminData();
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
-  const handleEditProgram = (program: Program) => {
-    // TODO: Open program edit modal
-    console.log('Edit program:', program);
+  const handleSelectProgram = (program: Program) => {
+    setSelectedProgram(program);
   };
 
-  const handleCreateActivity = (programId: number) => {
-    // TODO: Open activity creation modal
-    console.log('Create activity for program:', programId);
+  const handleBackToList = () => {
+    setSelectedProgram(null);
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Panel de Administrador</h1>
-        <div className="flex gap-2">
-          <Button variant="primary" size="sm">
-            Generar Reportes
-          </Button>
-          <Button variant="secondary" size="sm">
-            Configuración
-          </Button>
-        </div>
-      </div>
+      {!selectedProgram ? (
+        <>
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Panel de Administrador
+            </h1>
+            <div className="flex gap-2">
+              <Button variant="primary" size="sm">
+                Generar Reportes
+              </Button>
+              <Button variant="secondary" size="sm">
+                Configuración
+              </Button>
+            </div>
+          </div>
 
-      {error && <Alert type="error" message={error} />}
+          {error && <Alert type="error" message={error} />}
 
-      <DashboardStats
-        totalUsers={data?.totalUsers || 0}
-        activePrograms={data?.activePrograms || 0}
-        totalHours={data?.totalHours || 0}
-        loading={loading}
-      />
+          <DashboardStats
+            totalUsers={data?.totalUsers || 0}
+            activePrograms={data?.activePrograms || 0}
+            totalHours={data?.totalHours || 0}
+            loading={loading}
+          />
 
-      <ProgramsList onEditProgram={handleEditProgram} onCreateActivity={handleCreateActivity} />
+          <ProgramsList onSelectProgram={handleSelectProgram} />
 
-      <AdminActions />
+          <AdminActions />
+        </>
+      ) : (
+        <ProgramDetail program={selectedProgram} onBack={handleBackToList} />
+      )}
     </div>
   );
 }
