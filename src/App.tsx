@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { useAuthStore } from './utils/store/authStore';
-import { ProtectedRoute } from './utils/router/ProtectedRoute';
-import { PublicRoute } from './utils/router/PublicRoute'; // <--- IMPORTAMOS TU NUEVA BARRERA
+import { useAuthStore } from './app/store/authStore';
+import { PublicRoute } from './utils/router/PublicRoute';
+import { GuardRole } from './routes/GuardRole';
 
 import RootLayout from './components/layout/RootLayout';
 import AppLayout from './components/layout/AppLayout';
@@ -11,9 +11,9 @@ import SignUpPage from './pages/SignUpPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 
-import VolunteerDashboard from './modules/volunteer/pages/Dashboard';
-import CoordinatorDashboard from './modules/coordinator/pages/Dashboard';
-import AdminDashboard from './modules/admin/pages/Dashboard';
+// VISTAS DE TUS NUEVOS DOMINIOS (Features)
+import { ProgramsList } from './features/programas/views/ProgramsList';
+import { ProfileForm } from './features/miembros/views/ProfileForm';
 
 function HomeRedirect() {
   const { isAuthenticated, hasAnyRole } = useAuthStore();
@@ -23,7 +23,7 @@ function HomeRedirect() {
   }
 
   if (hasAnyRole(['Volunteer', 'Coordinator', 'Admin'])) {
-    return <Navigate to="/volunteer" replace />;
+    return <Navigate to="/programas" replace />;
   }
 
   return <Navigate to="/unauthorized" replace />;
@@ -36,7 +36,7 @@ function App() {
         <Route element={<RootLayout />}>
           <Route path="/" element={<HomeRedirect />} />
 
-          {/* 1. RUTAS PÚBLICAS: La barrera impide entrar aquí si ya tienes sesión */}
+          {/* 1. RUTAS PÚBLICAS */}
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
@@ -44,38 +44,19 @@ function App() {
 
           <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
-          {/* 2. RUTAS PROTEGIDAS: La barrera impide entrar si NO tienes sesión */}
-          <Route
-            element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route
-              path="/volunteer"
-              element={
-                <ProtectedRoute requiredRoles={['Volunteer', 'Coordinator', 'Admin']}>
-                  <VolunteerDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/coordinator"
-              element={
-                <ProtectedRoute requiredRoles={['Coordinator', 'Admin']}>
-                  <CoordinatorDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute requiredRoles={['Admin']}>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+          {/* 2. RUTAS DE NEGOCIO (Domain-Driven) */}
+          <Route element={<AppLayout />}>
+            {/* Dominio: Programas */}
+            <Route element={<GuardRole allowedRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
+              <Route path="/programas" element={<ProgramsList />} />
+            </Route>
+
+            {/* Dominio: Miembros (Perfil) */}
+            <Route element={<GuardRole allowedRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
+              <Route path="/perfil" element={<ProfileForm />} />
+            </Route>
+
+            {/* Aquí Henrry irá conectando las demás vistas de Actividades y Reportes */}
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />
