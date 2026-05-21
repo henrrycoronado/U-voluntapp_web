@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
-import { Card, Button, Alert } from '../../../components';
-import { adminApi } from '../service';
-import type { Program } from '../service/types/index';
+import { Card, Button, Alert } from '../../../shared/components';
+import { adminApi } from '../../../modules/admin/service';
+import type { Program } from '../../../modules/admin/service';
 
 interface ProgramsListProps {
   onSelectProgram?: (program: Program) => void;

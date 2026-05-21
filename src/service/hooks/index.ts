@@ -5,7 +5,6 @@ export { useFetch } from '../../shared/hooks/useFetch';
 // Domain-specific hooks
 export { usePrograms, useProgramById } from '../../features/programas/hooks/usePrograms';
 export {
-  useActivities,
   useActivitiesByProgram,
   useActivityById,
 } from '../../features/actividades/hooks/useActivities';

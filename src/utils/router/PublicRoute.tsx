@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../../app/store/authStore';
 
 export const PublicRoute = () => {
   const { token, user } = useAuthStore();

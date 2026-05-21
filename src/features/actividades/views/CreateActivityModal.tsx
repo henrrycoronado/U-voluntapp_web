@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AxiosError } from 'axios';
-import { Modal, Button, Alert } from '../../../components';
+import { Modal, Button, Alert } from '../../../shared/components';
 import { activitiesApi } from '../../../service/api';
 
 interface CreateActivityModalProps {

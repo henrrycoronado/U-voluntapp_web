@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../utils/store/authStore';
-import { useThemeStore } from '../utils/store/themeStore';
+import { useAuthStore } from '../app/store/authStore';
+import { useThemeStore } from '../app/store/themeStore';
 import type { RegisterRequest } from '../service/types/auth';
-import { Card, Button, Input, Alert } from '../components';
-import { useForm } from '../service/hooks/useForm';
+import { Card, Button, Input, Alert } from '../shared/components';
+import { useForm } from '../shared/hooks/useForm';
 import { authApi } from '../service/api/auth';
 import { validateForm, validators } from '../utils/validations/validators';
 import { getErrorMessage } from '../utils/exceptions/errorHandler';

@@ -12,7 +12,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 
 // VISTAS DE TUS NUEVOS DOMINIOS (Features)
-import { ProgramsList } from './features/programas/views/ProgramsList';
+import { ProgramsList } from './features/programas/views/ProgramList';
 import { ProfileForm } from './features/miembros/views/ProfileForm';
 
 function HomeRedirect() {
@@ -47,12 +47,12 @@ function App() {
           {/* 2. RUTAS DE NEGOCIO (Domain-Driven) */}
           <Route element={<AppLayout />}>
             {/* Dominio: Programas */}
-            <Route element={<GuardRole allowedRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
+            <Route element={<GuardRole requiredRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
               <Route path="/programas" element={<ProgramsList />} />
             </Route>
 
             {/* Dominio: Miembros (Perfil) */}
-            <Route element={<GuardRole allowedRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
+            <Route element={<GuardRole requiredRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
               <Route path="/perfil" element={<ProfileForm />} />
             </Route>
 
