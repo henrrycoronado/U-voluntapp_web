@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { ProgramCollaborator } from '../api/collaboratorsApi';
-import { collaboratorsApi } from '../api/collaboratorsApi';
-import { getErrorMessage } from '../../utils/exceptions/errorHandler';
+import type { ProgramCollaborator } from '../services/collaboratorsApi';
+import { collaboratorsApi } from '../services/collaboratorsApi';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export function useCollaboratorById(id: number) {
   const [data, setData] = useState<ProgramCollaborator | null>(null);

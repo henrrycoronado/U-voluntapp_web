@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { RoleRequest } from '../api/roleRequestsApi';
-import { roleRequestsApi } from '../api/roleRequestsApi';
-import { getErrorMessage } from '../../utils/exceptions/errorHandler';
+import type { RoleRequest } from '../services/roleRequestsApi';
+import { roleRequestsApi } from '../services/roleRequestsApi';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export function usePendingCoordinatorRequests() {
   const [data, setData] = useState<RoleRequest[] | null>(null);
