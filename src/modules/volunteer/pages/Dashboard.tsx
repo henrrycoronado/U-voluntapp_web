@@ -2,9 +2,9 @@ import { AlertCircle, Award, Clock, Zap, User, ClipboardList } from 'lucide-reac
 import { useState } from 'react';
 import { useVolunteerDashboard } from '../service';
 import { volunteerApi } from '../service';
-import { useAuthStore } from '../../../utils/store/authStore';
-import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../components';
-import { ProgramExplorer } from '../components/ProgramExplorer';
+import { useAuthStore } from '../../../app/store/authStore';
+import { Alert, AnalyticsCard, Card, Button, Modal, TextArea } from '../../../shared/components';
+import { ProgramExplorer } from '../../../features/programas/views/ProgramExplorer';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 // Importamos nuestros nuevos componentes (ahora con la ruta correcta)

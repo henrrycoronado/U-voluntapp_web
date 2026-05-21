@@ -1,7 +1,7 @@
 // Global API barrel exports
 export { authApi } from './auth';
 export { profilesApi } from './profileApi';
-export { programsApi } from './programsApi';
+export { programsApi } from '../../features/programas/services/programsApi';
 export { activitiesApi } from './activitiesApi';
 export { enrollmentsApi } from './enrollmentsApi';
 export { roleRequestsApi } from './roleRequestsApi';
@@ -9,7 +9,7 @@ export { collaboratorsApi } from './collaboratorsApi';
 
 // Re-export types from individual APIs
 export type { UserProfile, UpdateProfileRequest } from './profileApi';
-export type { Program, CreateProgramRequest } from './programsApi';
+export type { Program, CreateProgramRequest } from '../../features/programas/services/programsApi';
 export type {
   Activity,
   ActivityShift,

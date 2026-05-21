@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useAvailablePrograms, useActivitiesByProgram } from '../service';
-import { volunteerApi } from '../service';
-import type { Program } from '../service';
+import { useAvailablePrograms, useActivitiesByProgram } from '../../../modules/volunteer/service';
+import { volunteerApi } from '../../../modules/volunteer/service';
+import type { Program } from '../../../modules/volunteer/service';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export const ProgramExplorer = () => {

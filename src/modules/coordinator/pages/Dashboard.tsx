@@ -2,8 +2,8 @@ import { Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useCoordinatorData } from '../service/hooks';
 import { coordinatorApi } from '../service/api/coordinatorApi';
-import { useAuthStore } from '../../../utils/store/authStore';
-import { Alert, Button } from '../../../components';
+import { useAuthStore } from '../../../app/store/authStore';
+import { Alert, Button } from '../../../shared/components';
 import { CoordinatorStats, CoordinatorQuickActions, RoleRequestModal } from '../components';
 
 export default function Dashboard() {

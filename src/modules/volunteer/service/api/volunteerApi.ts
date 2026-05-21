@@ -1,4 +1,4 @@
-import { apiClient } from '../../../../service/api/client';
+import { apiClient } from '../../../../shared/services/client';
 import {
   profilesApi,
   programsApi,

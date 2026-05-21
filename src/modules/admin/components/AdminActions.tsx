@@ -1,5 +1,5 @@
 import { BarChart3 } from 'lucide-react';
-import { Card, Button } from '../../../components';
+import { Card, Button } from '../../../shared/components';
 
 export function AdminActions() {
   return (

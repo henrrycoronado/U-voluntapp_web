@@ -1,4 +1,4 @@
-import { Card, Button } from '../../../components';
+import { Card, Button } from '../../../shared/components';
 
 export function CoordinatorQuickActions() {
   return (

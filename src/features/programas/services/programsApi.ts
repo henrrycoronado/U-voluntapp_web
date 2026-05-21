@@ -1,5 +1,5 @@
-import { apiClient } from '../../shared/services/client';
-import type { ApiResponse } from '../types/api';
+import { apiClient } from '../../../shared/services/client';
+import type { ApiResponse } from '../../../service/types/api';
 
 export interface Program {
   id: number;

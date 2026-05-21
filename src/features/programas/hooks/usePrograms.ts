@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { Program } from '../api/programsApi';
-import { programsApi } from '../api/programsApi';
-import { getErrorMessage } from '../../utils/exceptions/errorHandler';
+import type { Program } from '../services/programsApi';
+import { programsApi } from '../services/programsApi';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export function usePrograms() {
   const [data, setData] = useState<Program[] | null>(null);

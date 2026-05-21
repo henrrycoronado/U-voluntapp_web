@@ -1,5 +1,5 @@
 import { Briefcase, Users, Clock } from 'lucide-react';
-import { AnalyticsCard } from '../../../components';
+import { AnalyticsCard } from '../../../shared/components';
 
 interface CoordinatorStatsProps {
   programs?: number;

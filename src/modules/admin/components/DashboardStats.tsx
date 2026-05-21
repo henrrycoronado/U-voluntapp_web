@@ -1,5 +1,5 @@
 import { Users, Briefcase, Clock } from 'lucide-react';
-import { AnalyticsCard } from '../../../components';
+import { AnalyticsCard } from '../../../shared/components';
 
 interface DashboardStatsProps {
   totalUsers?: number;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, TextArea, Button, Alert } from '../../../components';
+import { Modal, TextArea, Button, Alert } from '../../../shared/components';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 interface RoleRequestModalProps {

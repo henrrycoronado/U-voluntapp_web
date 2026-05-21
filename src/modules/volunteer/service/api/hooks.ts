@@ -1,4 +1,4 @@
-import { useFetch } from '../../../../service/hooks/useFetch';
+import { useFetch } from '../../../../shared/hooks/useFetch';
 
 interface VolunteerData {
   enrolledActivities: number;

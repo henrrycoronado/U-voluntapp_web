@@ -1,5 +1,5 @@
 import { useAdminData } from '../service/hooks';
-import { Alert, Button } from '../../../components';
+import { Alert, Button } from '../../../shared/components';
 import { DashboardStats, AdminActions } from '../components';
 
 export default function Dashboard() {
