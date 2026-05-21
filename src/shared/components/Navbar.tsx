@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../utils/store/authStore';
-import { useThemeStore } from '../utils/store/themeStore';
+import { useAuthStore } from '../../app/store/authStore';
+import { useThemeStore } from '../../app/store/themeStore';
 import { LogOut, Moon, Sun } from 'lucide-react';
 
 export default function Navbar() {

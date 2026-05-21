@@ -1,5 +1,5 @@
 import type { AuthResponse, LoginRequest, RegisterRequest } from '../types/auth';
-import { apiClient } from './client';
+import { apiClient } from '../../shared/services/client';
 
 export const authApi = {
   login: (payload: LoginRequest): Promise<AuthResponse> =>

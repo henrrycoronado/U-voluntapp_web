@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useThemeStore } from '../../utils/store/themeStore';
+import { useThemeStore } from '../../app/store/themeStore';
 
 export default function RootLayout() {
   const theme = useThemeStore((state) => state.theme);

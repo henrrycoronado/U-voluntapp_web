@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from '../../shared/services/client';
 import type { ApiResponse } from '../types/api';
 
 export interface ProgramCollaborator {

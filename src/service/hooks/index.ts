@@ -1,6 +1,6 @@
 // Generic hooks
-export { useForm } from './useForm';
-export { useFetch } from './useFetch';
+export { useForm } from '../../shared/hooks/useForm';
+export { useFetch } from '../../shared/hooks/useFetch';
 
 // Domain-specific hooks
 export { usePrograms, useProgramById } from './usePrograms';

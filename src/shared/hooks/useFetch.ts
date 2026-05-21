@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { apiClient } from '../api/client';
+import { apiClient } from '../services/client';
 import { getErrorMessage } from '../../utils/exceptions/errorHandler';
 
 interface UseFetchOptions {

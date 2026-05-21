@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 import { useEffect } from 'react';
-import Navbar from '../Navbar';
-import Sidebar from '../Sidebar';
-import { useThemeStore } from '../../utils/store/themeStore';
+import Navbar from '../../shared/components/Navbar';
+import Sidebar from '../../shared/components/Sidebar';
+import { useThemeStore } from '../../app/store/themeStore';
 
 export default function AppLayout() {
   const theme = useThemeStore((state) => state.theme);
