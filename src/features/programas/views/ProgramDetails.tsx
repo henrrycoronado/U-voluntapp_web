@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, ArrowLeft } from 'lucide-react';
 import { Card, Button, Alert } from '../../../shared/components';
-import { activitiesApi } from '../../../service/api';
-import type { Activity, Program } from '../../../modules/admin/service';
+import { activitiesApi, type Activity } from '../../actividades/services/activitiesApi';
+import type { Program } from '../services/programsApi';
 import { CreateActivityModal } from '../../actividades/views/CreateActivityModal';
 
 interface ProgramDetailProps {

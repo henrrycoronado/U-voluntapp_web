@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useAvailablePrograms, useActivitiesByProgram } from '../../../modules/volunteer/service';
-import { volunteerApi } from '../../../modules/volunteer/service';
-import type { Program } from '../../../modules/volunteer/service';
+import { usePrograms } from '../hooks/usePrograms';
+import { useActivitiesByProgram } from '../../actividades/hooks/useActivities';
+import { enrollmentsApi } from '../../../service/api/enrollmentsApi';
+import type { Program } from '../services/programsApi';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export const ProgramExplorer = () => {
@@ -9,9 +10,9 @@ export const ProgramExplorer = () => {
   const [enrollingId, setEnrollingId] = useState<number | null>(null);
   const [enrollError, setEnrollError] = useState<string | null>(null);
 
-  const { data: programs, loading, error } = useAvailablePrograms();
+  const { data: programs, loading, error } = usePrograms();
   const { data: activities, loading: activitiesLoading } = useActivitiesByProgram(
-    selectedProgram?.id ?? null
+    selectedProgram?.id ?? 0
   );
 
   const handleSelectProgram = (program: Program | null) => {
@@ -25,7 +26,7 @@ export const ProgramExplorer = () => {
     setEnrollError(null);
 
     try {
-      await volunteerApi.enrollInActivity({ activityId });
+      await enrollmentsApi.create({ activityId });
       setEnrollError(null);
       // Optionally refresh enrollments or show success message
     } catch (err) {
@@ -120,7 +121,7 @@ export const ProgramExplorer = () => {
                       {activity.description}
                     </p>
                     <div className="flex gap-4 mt-2 text-xs font-medium text-gray-500 dark:text-gray-400">
-                      <span>⏱️ {activity.totalHours} hrs</span>
+                      <span>📅 {activity.startDate}</span>
                     </div>
                   </div>
                   <button

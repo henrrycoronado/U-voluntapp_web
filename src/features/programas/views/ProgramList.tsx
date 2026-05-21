@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Card, Button, Alert } from '../../../shared/components';
-import { adminApi } from '../../../modules/admin/service';
-import type { Program } from '../../../modules/admin/service';
+import { programsApi, type Program } from '../services/programsApi';
 
 interface ProgramsListProps {
   onSelectProgram?: (program: Program) => void;
@@ -20,8 +19,8 @@ export function ProgramsList({ onSelectProgram }: ProgramsListProps) {
   const loadPrograms = async () => {
     try {
       setLoading(true);
-      const response = await adminApi.getAllPrograms();
-      setPrograms((response.data as unknown as Program[]) || []);
+      const response = await programsApi.getAll();
+      setPrograms((response.data.data as unknown as Program[]) || []);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar programas');

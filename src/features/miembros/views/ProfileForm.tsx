@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useMyProfile } from '../../../modules/volunteer/service';
-import { volunteerApi } from '../../../modules/volunteer/service';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
+import { useMyProfile } from '../hooks/useMyProfile';
+import { volunteerApi } from '../services/volunteerApi';
 
 export const ProfileForm = () => {
   const { data: profile, loading, error } = useMyProfile();
@@ -176,3 +176,4 @@ export const ProfileForm = () => {
     </div>
   );
 };
+
