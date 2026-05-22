@@ -42,7 +42,10 @@ export const useAuthStore = create<AuthStore>()(
       isAuthenticated: false,
 
       setAuth: (user: AuthUser) => {
-        const resolvedRoles = user.roles?.length ? user.roles : parseRolesFromToken(user.token);
+        const resolvedRoles =
+          user.roles && user.roles.length > 0
+            ? (user.roles as UserRole[])
+            : parseRolesFromToken(user.token);
         const primaryRole = resolvedRoles.length > 0 ? resolvedRoles[0] : null;
 
         set({
@@ -59,14 +62,11 @@ export const useAuthStore = create<AuthStore>()(
       logout: async () => {
         const { user } = get();
 
-        const currentUser = user as unknown as { id?: string; email?: string };
-        const userId = currentUser?.id || currentUser?.email || '';
-
-        if (userId) {
+        if (user?.refreshToken) {
           try {
-            await authApi.logout(userId);
+            await authApi.logout({ refreshToken: user.refreshToken });
           } catch (error) {
-            console.error('Error al cerrar sesión en el servidor:', error);
+            console.error('Error signing out on the server:', error);
           }
         }
 

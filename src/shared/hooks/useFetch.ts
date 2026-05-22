@@ -6,12 +6,6 @@ interface UseFetchOptions {
   enabled?: boolean;
 }
 
-interface ApiResponse<T> {
-  data: T;
-  success?: boolean;
-  message?: string;
-}
-
 export function useFetch<T>(url: string, options: UseFetchOptions = {}) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,8 +17,8 @@ export function useFetch<T>(url: string, options: UseFetchOptions = {}) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await apiClient.get<ApiResponse<T>>(url);
-        setData(response.data.data as T);
+        const response = await apiClient.get<T>(url);
+        setData(response.data);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
