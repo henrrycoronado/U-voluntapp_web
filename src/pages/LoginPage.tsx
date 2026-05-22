@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Input } from '../shared/components/Input';
-import { Button } from '../shared/components/Button';
-import { Alert } from '../shared/components/Alert';
-import { authApi } from '../service/api/auth';
-import { useAuthStore } from '../app/store/authStore';
+import { Input } from '../components/Input';
+import { Button } from '../components/Button';
+import { Alert } from '../components/Alert';
+import { useLogin } from '../service/hooks/useAuth';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  const { login, isLoading, error: loginError } = useLogin();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,19 +19,16 @@ export const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsLoading(true);
 
     try {
-      const response = await authApi.login(formData);
-      // El backend devuelve Token, User, Roles, etc. Lo guardamos en Zustand.
-      setAuth(response.data); 
-      navigate('/programas');
+      await login(formData);
+      navigate('/programs');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Credenciales inválidas o error de conexión.');
-    } finally {
-      setIsLoading(false);
+      // Error is already handled in the hook, but we can set local error if needed or use the hook's error
     }
   };
+
+  const displayError = loginError || error;
 
   return (
     <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center font-sans text-white">
@@ -46,28 +41,28 @@ export const LoginPage = () => {
       
       <div className="bg-[#18181b] p-8 rounded-2xl border border-zinc-800/80 w-full max-w-[400px] shadow-xl">
         <div className="text-center mb-8">
-          <h1 className="text-xl font-bold mb-1">Iniciar Sesión</h1>
-          <p className="text-xs text-zinc-400">Ingresa a tu cuenta para continuar ayudando.</p>
+          <h1 className="text-xl font-bold mb-1">Sign In</h1>
+          <p className="text-xs text-zinc-400">Enter your account to continue helping.</p>
         </div>
 
-        {error && (
+        {displayError && (
           <Alert variant="error" className="mb-6 bg-red-950 border-red-900 text-red-400">
-            {error}
+            {displayError}
           </Alert>
         )}
         
         <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <Input 
-            label="Correo Electrónico" 
+            label="Email" 
             type="email" 
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="admin @ucb.edu.bo" 
+            placeholder="admin@ucb.edu.bo" 
             required
           />
           <Input 
-            label="Contraseña" 
+            label="Password" 
             type="password" 
             name="password"
             value={formData.password}
@@ -78,13 +73,13 @@ export const LoginPage = () => {
           
           <div className="mt-2">
             <Button variant="primary" type="submit" disabled={isLoading}>
-              {isLoading ? 'Conectando...' : 'Entrar'}
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </Button>
           </div>
         </form>
         
         <div className="mt-6 text-center text-xs text-zinc-400">
-          ¿No tienes una cuenta? <Link to="/signup" className="text-yellow-500 hover:underline">Regístrate</Link>
+          Don't have an account? <Link to="/signup" className="text-yellow-500 hover:underline">Sign up</Link>
         </div>
       </div>
     </div>

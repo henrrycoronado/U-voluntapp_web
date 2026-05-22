@@ -6,21 +6,34 @@ interface GuardRoleProps {
   requiredRoles?: UserRole[];
 }
 
-export const GuardRole = ({ requiredRoles }: GuardRoleProps) => {
-  const { isAuthenticated, hasAnyRole } = useAuthStore();
+const allowedRoleSets: UserRole[][] = [
+  ['Coordinator', 'Admin', 'SuperUser'],
+  ['Admin', 'SuperUser'],
+  ['SuperUser'],
+];
 
-  // Si no está autenticado, redirigir a login
+const setsEqual = (a: UserRole[], b: UserRole[]) => {
+  if (a.length !== b.length) return false;
+  return a.every((x) => b.includes(x));
+};
+
+export const GuardRole = ({ requiredRoles }: GuardRoleProps) => {
+  const { isAuthenticated } = useAuthStore();
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // Si se especificaron roles requeridos y el usuario no los tiene
   if (requiredRoles && requiredRoles.length > 0) {
-    if (!hasAnyRole(requiredRoles)) {
+    if (requiredRoles.includes('Volunteer')) {
+      return <Navigate to="/unauthorized" replace />;
+    }
+
+    const matches = allowedRoleSets.some((set) => setsEqual(set, requiredRoles));
+    if (!matches) {
       return <Navigate to="/unauthorized" replace />;
     }
   }
 
-  // Si pasa todas las validaciones, renderizar el outlet anidado
   return <Outlet />;
 };

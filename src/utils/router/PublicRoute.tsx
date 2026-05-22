@@ -5,7 +5,7 @@ export function PublicRoute() {
   const { isAuthenticated } = useAuthStore();
 
   if (isAuthenticated) {
-    return <Navigate to="/programas" replace />;
+    return <Navigate to="/programs" replace />;
   }
 
   return <Outlet />;
