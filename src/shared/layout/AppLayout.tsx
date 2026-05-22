@@ -1,6 +1,5 @@
-import React from 'react';
-import { Sidebar } from '../../shared/components/Sidebar';
 import { Outlet } from 'react-router-dom';
+import { Sidebar } from '../../components';
 
 export const AppLayout = () => {
   return (
