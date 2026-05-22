@@ -41,7 +41,7 @@ export const ActivityDetails = () => {
       });
       setSuccessMessage('Successfully enrolled in this activity!');
       refresh();
-    } catch (err) {
+    } catch {
       // Error handled by hook
     }
   };

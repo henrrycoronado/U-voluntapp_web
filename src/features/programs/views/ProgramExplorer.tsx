@@ -26,7 +26,7 @@ export const ProgramExplorer = () => {
 
     try {
       await createEnrollment({ activityCode });
-    } catch (err) {
+    } catch {
       // Error handled by hook
     } finally {
       setEnrollingId(null);

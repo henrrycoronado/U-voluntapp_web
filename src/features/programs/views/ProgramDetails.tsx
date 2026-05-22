@@ -25,7 +25,7 @@ export const ProgramDetails = () => {
     try {
       await createEnrollment({ activityCode: id }); 
       setIsEnrolled(true);
-    } catch (error) {
+    } catch {
       // Error handled by hook
     }
   };

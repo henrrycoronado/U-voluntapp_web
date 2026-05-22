@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface StatusBadgeProps {
   text: string;
   type?: 'default' | 'warning';

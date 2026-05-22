@@ -32,8 +32,6 @@ export function useMyProfile() {
       const response = await profilesApi.updateMe(payload);
       setData(response.data);
       return response.data;
-    } catch (err) {
-      throw err;
     } finally {
       setIsUpdating(false);
     }
