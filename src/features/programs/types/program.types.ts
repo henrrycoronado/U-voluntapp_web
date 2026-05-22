@@ -15,6 +15,7 @@ export interface Program {
 
 export interface CreateProgramRequest {
   name: string;
+  description?: string;
   acronym?: string;
 }
 
