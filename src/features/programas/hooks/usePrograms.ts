@@ -13,7 +13,7 @@ export function usePrograms() {
       try {
         setLoading(true);
         const response = await programsApi.getAll();
-        setData(response.data as Program[]);
+        setData(response.data.data as Program[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
@@ -41,7 +41,7 @@ export function useProgramById(id: number) {
       try {
         setLoading(true);
         const response = await programsApi.getById(id);
-        setData(response.data as Program);
+        setData(response.data.data as Program);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));

@@ -46,13 +46,13 @@ export function CreateActivityModal({
       const endDate = new Date(formData.endDate).toISOString();
 
       const payload = {
-        ProgramId: programId,
-        ActivityTypeId: 1,
-        Name: formData.name.trim(),
-        StartDate: startDate,
-        EndDate: endDate,
-        RequiresEnrollment: true,
-        RequiresApproval: false,
+        programId: programId,
+        activityTypeId: 1,
+        name: formData.name.trim(),
+        startDate: startDate,
+        endDate: endDate,
+        requiresEnrollment: true,
+        requiresApproval: false,
       };
       await activitiesApi.createSimple(payload);
 
@@ -78,7 +78,7 @@ export function CreateActivityModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" title="Crear Nueva Actividad">
-      {error && <Alert type="error" message={error} className="mb-4" />}
+      {error && <Alert type="error" message={error} />}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

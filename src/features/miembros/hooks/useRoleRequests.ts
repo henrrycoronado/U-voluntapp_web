@@ -13,7 +13,7 @@ export function usePendingCoordinatorRequests() {
       try {
         setLoading(true);
         const response = await roleRequestsApi.getPendingCoordinator();
-        setData(response.data as RoleRequest[]);
+        setData(response.data.data as RoleRequest[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
@@ -39,7 +39,7 @@ export function usePendingAdminRequests() {
       try {
         setLoading(true);
         const response = await roleRequestsApi.getPendingAdmin();
-        setData(response.data as RoleRequest[]);
+        setData(response.data.data as RoleRequest[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));

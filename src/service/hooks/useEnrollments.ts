@@ -15,7 +15,7 @@ export function useEnrollmentById(id: number) {
       try {
         setLoading(true);
         const response = await enrollmentsApi.getById(id);
-        setData(response.data as Enrollment);
+        setData(response.data.data as Enrollment);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
@@ -43,7 +43,7 @@ export function useEnrollmentsByActivity(activityId: number) {
       try {
         setLoading(true);
         const response = await enrollmentsApi.getByActivity(activityId);
-        setData(response.data as Enrollment[]);
+        setData(response.data.data as Enrollment[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
@@ -69,7 +69,7 @@ export function useMyEnrollments() {
       try {
         setLoading(true);
         const response = await enrollmentsApi.getMine();
-        setData(response.data as Enrollment[]);
+        setData(response.data.data as Enrollment[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));

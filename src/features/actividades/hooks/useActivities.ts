@@ -15,7 +15,7 @@ export function useActivitiesByProgram(programId: number) {
       try {
         setLoading(true);
         const response = await activitiesApi.getByProgram(programId);
-        setData(response.data as Activity[]);
+        setData(response.data.data as Activity[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
@@ -43,7 +43,7 @@ export function useActivityById(id: number) {
       try {
         setLoading(true);
         const response = await activitiesApi.getById(id);
-        setData(response.data as Activity);
+        setData(response.data.data as Activity);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));

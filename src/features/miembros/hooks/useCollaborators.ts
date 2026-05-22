@@ -15,7 +15,7 @@ export function useCollaboratorById(id: number) {
       try {
         setLoading(true);
         const response = await collaboratorsApi.getById(id);
-        setData(response.data as ProgramCollaborator);
+        setData(response.data.data as ProgramCollaborator);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
@@ -43,7 +43,7 @@ export function useCollaboratorsByProgram(programId: number) {
       try {
         setLoading(true);
         const response = await collaboratorsApi.getByProgram(programId);
-        setData(response.data as ProgramCollaborator[]);
+        setData(response.data.data as ProgramCollaborator[]);
         setError(null);
       } catch (err) {
         setError(getErrorMessage(err));
