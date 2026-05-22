@@ -74,9 +74,9 @@ export const ProgramList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-700">
           {programs.map((prog: Program) => (
             <Card
-              key={prog.id}
+              key={prog.uvaCode}
               className="group flex flex-col h-full p-8 hover:border-yellow-500/30 transition-all cursor-pointer bg-[#121214]"
-              onClick={() => navigate(`/programs/${prog.id}`)}
+              onClick={() => navigate(`/programs/${prog.uvaCode}`)}
             >
               <div className="flex justify-between items-start mb-6">
                 <StatusBadge text={prog.state || 'ACTIVE'} type="default" />

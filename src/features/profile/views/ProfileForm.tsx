@@ -64,13 +64,13 @@ const ProfileFormInner = ({
     }
 
     try {
-      // Sanitize: Convert empty strings to null for optional fields to avoid backend validation issues
+      // Sanitize: Convert empty strings to undefined for optional fields to avoid backend validation issues
       const payload: UpdateProfileRequest = {
         firstName: formData.firstName,
         lastName: formData.lastName,
-        careerCode: formData.careerCode || null,
-        phone: formData.phone || null,
-        housingLocation: formData.housingLocation || null,
+        careerCode: formData.careerCode || undefined,
+        phone: formData.phone || undefined,
+        housingLocation: formData.housingLocation || undefined,
         personalGoalHours: formData.personalGoalHours,
       };
 
