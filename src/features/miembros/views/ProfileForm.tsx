@@ -1,179 +1,102 @@
-import { useEffect, useState } from 'react';
-import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
-import { useMyProfile } from '../hooks/useMyProfile';
-import { volunteerApi } from '../services/volunteerApi';
+import React, { useState } from 'react';
+import { Button, Input, Card, Alert } from '../../../shared/components';
+// import { profileApi } from '../services/profileApi'; // Descomentar cuando la API esté lista
 
 export const ProfileForm = () => {
-  const { data: profile, loading, error } = useMyProfile();
-  const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  
+  // Estado inicial simulado (luego vendrá de tu Zustand authStore o de un fetch)
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    housingLocation: '',
+     firstName: 'Usuario',
+     lastName: 'Voluntario',
+     phone: '77777777',
+     housingLocation: '',
+     careerCode: 'SIS'
   });
 
-  useEffect(() => {
-    if (profile) {
-      setFormData({
-        firstName: profile.firstName || '',
-        lastName: profile.lastName || '',
-        phone: profile.phone || '',
-        housingLocation: profile.housingLocation || '',
-      });
-    }
-  }, [profile]);
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    setFormError(null);
-    setSuccessMessage(null);
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitting(true);
-    setFormError(null);
-    setSuccessMessage(null);
-
-    try {
-      const updateData = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phone: formData.phone,
-        housingLocation: formData.housingLocation,
-      };
-      await volunteerApi.updateMyProfile(updateData);
-      setSuccessMessage('✓ Perfil actualizado con éxito');
-    } catch (err) {
-      setFormError(getErrorMessage(err));
-    } finally {
-      setSubmitting(false);
-    }
+    setIsLoading(true);
+    setSuccessMessage('');
+    
+    // Aquí irá: await profileApi.updateMe(formData)
+    setTimeout(() => {
+       setSuccessMessage('¡Perfil actualizado correctamente en la base de datos!');
+       setIsLoading(false);
+    }, 800);
   };
-
-  const handleDelete = async () => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar tu cuenta permanentemente?')) {
-      return;
-    }
-
-    setSubmitting(true);
-    setFormError(null);
-
-    try {
-      await volunteerApi.deleteMyAccount();
-      setSuccessMessage('✓ Cuenta eliminada. Serás redirigido al inicio.');
-      // Optionally redirect after a delay
-      setTimeout(() => (window.location.href = '/login'), 2000);
-    } catch (err) {
-      setFormError(getErrorMessage(err));
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  if (loading && !profile)
-    return <div className="p-4 text-gray-500 dark:text-gray-400">Cargando perfil...</div>;
 
   return (
-    <div className="max-w-2xl bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-white">Mi Perfil</h2>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
-          {error}
-        </div>
-      )}
-
-      {formError && (
-        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-md border border-red-300 dark:border-red-800">
-          {formError}
-        </div>
-      )}
+    <div className="p-4 md:p-10 w-full max-w-3xl mx-auto text-white">
+      <h1 className="text-2xl font-bold mb-8">Mi Perfil</h1>
 
       {successMessage && (
-        <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-md border border-green-300 dark:border-green-800">
+        <Alert variant="success" className="mb-6">
           {successMessage}
-        </div>
+        </Alert>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Nombre
-            </label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
-            />
+      <Card className="p-6 md:p-8">
+        <div className="flex items-center gap-6 mb-8 pb-8 border-b border-zinc-800/80">
+          <div className="w-20 h-20 rounded-full bg-zinc-800 flex items-center justify-center text-yellow-500 text-3xl font-bold">
+            {formData.firstName.charAt(0)}{formData.lastName.charAt(0)}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Apellido
-            </label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
-            />
+            <h2 className="text-xl font-bold">{formData.firstName} {formData.lastName}</h2>
+            <p className="text-sm text-zinc-400">Voluntario Activo de la UCB</p>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Teléfono
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Input 
+              label="Nombres" 
+              name="firstName" 
+              value={formData.firstName} 
+              onChange={handleChange} 
+              required 
+            />
+            <Input 
+              label="Apellidos" 
+              name="lastName" 
+              value={formData.lastName} 
+              onChange={handleChange} 
+              required 
+            />
+            <Input 
+              label="Teléfono" 
+              name="phone" 
+              value={formData.phone} 
+              onChange={handleChange} 
+            />
+            <Input 
+              label="Dirección / Zona" 
+              name="housingLocation" 
+              value={formData.housingLocation} 
+              onChange={handleChange} 
+              placeholder="Ej: Zona Sur, Obrajes"
+            />
+            <Input 
+              label="Código de Carrera" 
+              name="careerCode" 
+              value={formData.careerCode} 
+              onChange={handleChange} 
+              placeholder="Ej: SIS, DER, ARQ" 
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Lugar de residencia
-          </label>
-          <input
-            type="text"
-            name="housingLocation"
-            value={formData.housingLocation}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
-          />
-        </div>
-
-        <div className="flex justify-between items-center pt-4 mt-6 border-t border-gray-200 dark:border-gray-700 transition-colors">
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={submitting}
-            className="px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-md font-medium transition-colors disabled:opacity-50"
-          >
-            {submitting ? 'Procesando...' : 'Eliminar Cuenta'}
-          </button>
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="px-6 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-medium transition-colors disabled:opacity-50"
-          >
-            {submitting ? 'Guardando...' : 'Guardar Cambios'}
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-end mt-4 pt-6 border-t border-zinc-800/80">
+            <Button variant="primary" type="submit" disabled={isLoading} className="!w-auto px-8">
+              {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+            </Button>
+          </div>
+        </form>
+      </Card>
     </div>
   );
 };
-

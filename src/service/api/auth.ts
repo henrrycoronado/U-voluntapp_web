@@ -8,6 +8,7 @@ export const authApi = {
   register: (payload: RegisterRequest): Promise<AuthResponse> =>
     apiClient.post('/api/v1/auth/register', payload).then((res) => res.data),
 
-  logout: (userId: string): Promise<void> =>
-    apiClient.post('/api/v1/auth/logout', null, { params: { userId } }).then(() => {}),
+  // CORRECCIÓN: El backend requiere el refreshToken en el cuerpo (JSON), no en la URL.
+  logout: (refreshToken: string): Promise<void> =>
+    apiClient.post('/api/v1/auth/logout', { refreshToken }).then(() => {}),
 };
