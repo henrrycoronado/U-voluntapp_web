@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { profilesApi, type UserProfile } from '../services/profileApi';
+import { profilesApi, type UserProfile, type UpdateProfileRequest } from '../services/profileApi';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
 export function useMyProfile() {
@@ -26,7 +26,7 @@ export function useMyProfile() {
     fetchProfile();
   }, []);
 
-  const updateProfile = async (payload: any) => {
+  const updateProfile = async (payload: UpdateProfileRequest) => {
     setIsUpdating(true);
     try {
       const response = await profilesApi.updateMe(payload);

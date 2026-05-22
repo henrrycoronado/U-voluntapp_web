@@ -23,14 +23,14 @@ export const CreateProgramModal = ({ isOpen, onClose, onSuccess }: CreateProgram
       await createProgram({
         name: formData.name,
         description: formData.description,
-        acronym: formData.acronym
+        acronym: formData.acronym,
       });
-      
+
       setFormData({ name: '', description: '', acronym: '' });
       onSuccess?.();
       onClose();
-    } catch (err: any) {
-      console.error(err);
+    } catch {
+      // Error handled by hook
     }
   };
 
@@ -42,36 +42,36 @@ export const CreateProgramModal = ({ isOpen, onClose, onSuccess }: CreateProgram
         </Alert>
       )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <Input 
-          label="Program Name" 
-          type="text" 
-          name="name" 
-          value={formData.name} 
-          onChange={handleChange} 
+        <Input
+          label="Program Name"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
           placeholder="e.g. Environmental Awareness"
-          required 
+          required
         />
-        <Input 
-          label="Acronym" 
-          type="text" 
-          name="acronym" 
-          value={formData.acronym} 
-          onChange={handleChange} 
+        <Input
+          label="Acronym"
+          type="text"
+          name="acronym"
+          value={formData.acronym}
+          onChange={handleChange}
           placeholder="e.g. ENV-01"
         />
-        <Input 
-          label="Brief Description" 
-          type="text" 
-          name="description" 
-          value={formData.description} 
-          onChange={handleChange} 
+        <Input
+          label="Brief Description"
+          type="text"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
           placeholder="Describe the main goal of this program"
-          required 
+          required
         />
         <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-zinc-800/50">
-          <button 
-            type="button" 
-            onClick={onClose} 
+          <button
+            type="button"
+            onClick={onClose}
             className="text-xs px-4 py-2 text-zinc-400 hover:text-white transition-colors"
           >
             Cancel

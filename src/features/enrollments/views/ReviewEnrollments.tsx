@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { 
-  Table, 
-  Thead, 
-  Tbody, 
-  Tr, 
-  Th, 
-  Td, 
-  StatusBadge, 
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  StatusBadge,
   SkeletonList,
   Alert,
-  Card
+  Card,
 } from '../../../components';
 import { useEnrollmentsByActivity, useReviewEnrollment } from '../hooks/useEnrollments';
 import { Check, X, User, ArrowLeft } from 'lucide-react';
@@ -27,24 +27,25 @@ export const ReviewEnrollments = () => {
     try {
       await reviewEnrollment(uvaCode, { approved });
       refresh();
-    } catch (err) {
+    } catch {
       // Error is handled by hook but we can capture it for local display if needed
     }
   };
 
-  if (loading) return (
-    <div className="p-10 max-w-7xl mx-auto">
-      <SkeletonList count={5} />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="p-10 max-w-7xl mx-auto">
+        <SkeletonList count={5} />
+      </div>
+    );
 
   return (
     <div className="p-4 md:p-10 w-full max-w-7xl mx-auto text-white animate-in fade-in duration-500">
-      <button 
-        onClick={() => navigate(-1)} 
+      <button
+        onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-zinc-400 hover:text-white mb-8 text-sm transition-colors group"
       >
-        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> 
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
         Back to Activity
       </button>
 
@@ -66,7 +67,9 @@ export const ReviewEnrollments = () => {
               <User size={24} className="text-zinc-500" />
             </div>
             <h3 className="text-xl font-bold mb-2">No pending requests</h3>
-            <p className="text-zinc-500 text-sm">There are no enrollment requests for this activity at the moment.</p>
+            <p className="text-zinc-500 text-sm">
+              There are no enrollment requests for this activity at the moment.
+            </p>
           </div>
         </Card>
       ) : (
@@ -90,7 +93,9 @@ export const ReviewEnrollments = () => {
                     </div>
                     <div>
                       <p className="font-bold text-white">{enrollment.enrolledProfileName}</p>
-                      <p className="text-[10px] text-zinc-500 uppercase font-bold">Ref: {enrollment.enrolledProfileCode}</p>
+                      <p className="text-[10px] text-zinc-500 uppercase font-bold">
+                        Ref: {enrollment.enrolledProfileCode}
+                      </p>
                     </div>
                   </div>
                 </Td>
@@ -110,7 +115,7 @@ export const ReviewEnrollments = () => {
                 <Td className="text-right">
                   {enrollment.stateCode === 'stage-1' ? ( // Assuming stage-1 is PENDING
                     <div className="flex justify-end gap-2">
-                      <button 
+                      <button
                         onClick={() => handleReview(enrollment.uvaCode, true)}
                         disabled={isReviewing}
                         className="p-2 bg-green-500/10 hover:bg-green-500/20 rounded-lg text-green-500 transition-colors disabled:opacity-50"
@@ -118,7 +123,7 @@ export const ReviewEnrollments = () => {
                       >
                         <Check size={18} />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleReview(enrollment.uvaCode, false)}
                         disabled={isReviewing}
                         className="p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg text-red-500 transition-colors disabled:opacity-50"
@@ -128,7 +133,9 @@ export const ReviewEnrollments = () => {
                       </button>
                     </div>
                   ) : (
-                    <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Processed</span>
+                    <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
+                      Processed
+                    </span>
                   )}
                 </Td>
               </Tr>
