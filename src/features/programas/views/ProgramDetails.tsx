@@ -1,119 +1,89 @@
 import { useState, useEffect } from 'react';
-import { Plus, ArrowLeft } from 'lucide-react';
-import { Card, Button, Alert } from '../../../shared/components';
-import { activitiesApi, type Activity } from '../../actividades/services/activitiesApi';
-import type { Program } from '../services/programsApi';
-import { CreateActivityModal } from '../../actividades/views/CreateActivityModal';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ArrowLeft, Users, CheckCircle } from 'lucide-react';
+import { Button, Card, StatusBadge, Alert } from '../../../shared/components';
+import apiClient from '../../../shared/services/client';
 
-interface ProgramDetailProps {
-  program: Program;
-  onBack: () => void;
-}
-
-export function ProgramDetail({ program, onBack }: ProgramDetailProps) {
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+export const ProgramDetails = () => {
+  const navigate = useNavigate();
+  const { id } = useParams(); 
+  const [program, setProgram] = useState<any>(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    loadActivities();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program.id]);
+    const fetchProgramDetails = async () => {
+      try {
+        // RUTA CORREGIDA:
+        const response = await apiClient.get(`/api/v1/programs/${id}`);
+        setProgram(response.data.data || response.data);
+      } catch (error) {
+        console.error('Error al obtener detalles:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (id) fetchProgramDetails();
+  }, [id]);
 
-  const loadActivities = async () => {
+  const handleEnroll = async () => {
+    setIsSubmitting(true);
     try {
-      setLoading(true);
-      const response = await activitiesApi.getByProgram(program.id);
-      setActivities((response.data as unknown as Activity[]) || []);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar actividades');
-      setActivities([]);
+      await apiClient.post('/api/v1/enrollments', { programCode: id });
+      setIsEnrolled(true);
+    } catch (error) {
+      alert('Error al procesar la inscripción.');
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  const handleActivityCreated = () => {
-    loadActivities();
-    setShowCreateModal(false);
-  };
+  if (isLoading) return <div className="text-zinc-500 text-center py-20 text-white">Cargando información...</div>;
+  if (!program) return <div className="text-zinc-500 text-center py-20 text-white">Programa no encontrado.</div>;
 
   return (
-    <>
-      <Card className="p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={onBack}
-            className="flex items-center gap-1"
-          >
-            <ArrowLeft size={16} /> Volver
-          </Button>
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{program.name}</h2>
-            <p className="text-gray-500 dark:text-gray-400">{program.description}</p>
-            <p className="text-xs text-gray-400 mt-1">Estado: {program.state}</p>
+    <div className="p-4 md:p-10 w-full max-w-5xl mx-auto text-white">
+      <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-zinc-400 hover:text-white mb-8 text-sm transition-colors">
+        <ArrowLeft size={16} /> Volver a programas
+      </button>
+
+      {isEnrolled && (
+        <Alert variant="success" className="mb-8">
+          <CheckCircle size={20} className="mt-0.5" />
+          <div className="flex flex-col gap-0.5">
+            <span className="font-semibold text-sm">¡Inscripción exitosa!</span>
+            <span className="text-xs text-[#4ade80]/80">Tu registro quedó grabado en la base de datos.</span>
           </div>
-        </div>
+        </Alert>
+      )}
 
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Actividades</h3>
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2"
-          >
-            <Plus size={16} /> Nueva Actividad
-          </Button>
-        </div>
-
-        {error && <Alert type="error" message={error} />}
-
-        {loading ? (
-          <p className="text-center text-gray-500 dark:text-gray-400">Cargando actividades...</p>
-        ) : activities.length === 0 ? (
-          <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-            Aun no hay actividades. Crea una para empezar.
+      <div className="flex flex-col lg:flex-row gap-10">
+        <div className="flex-1">
+          <StatusBadge text={program.state || "ACTIVO"} type="default" />
+          <h1 className="text-3xl font-bold mt-4 mb-3">{program.name}</h1>
+          <p className="text-zinc-400 text-sm mb-10 max-w-2xl leading-relaxed">
+            {program.description || 'Sin descripción detallada.'}
           </p>
-        ) : (
-          <div className="grid gap-4">
-            {activities.map((activity) => (
-              <div
-                key={activity.id}
-                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
-              >
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white">{activity.name}</h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {activity.description}
-                    </p>
-                  </div>
-                  <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded">
-                    {activity.state}
-                  </span>
-                </div>
-                <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400">
-                  <span>📅 {new Date(activity.startDate).toLocaleDateString()}</span>
-                  <span>📍 {activity.capacity} cupos</span>
-                  <span>✅ {activity.enrolled || 0} inscritos</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </Card>
+        </div>
 
-      <CreateActivityModal
-        isOpen={showCreateModal}
-        onClose={() => setShowCreateModal(false)}
-        programId={program.id}
-        onActivityCreated={handleActivityCreated}
-      />
-    </>
+        <div className="w-full lg:w-[320px] flex-shrink-0">
+          <Card className="p-8 text-center flex flex-col items-center bg-[#18181b]">
+            <div className="w-14 h-14 rounded-full border border-yellow-500/20 bg-yellow-500/10 flex items-center justify-center mb-4 text-yellow-500">
+              <Users size={24} />
+            </div>
+            {isEnrolled ? (
+               <Button variant="disabled" disabled className="w-full">
+                 <CheckCircle size={16} className="text-[#4ade80] mr-2" /> Ya estás inscrito
+               </Button>
+            ) : (
+              <Button variant="primary" onClick={handleEnroll} disabled={isSubmitting} className="w-full text-black bg-yellow-500 font-bold">
+                {isSubmitting ? 'Procesando...' : 'Inscribirme ahora'}
+              </Button>
+            )}
+          </Card>
+        </div>
+      </div>
+    </div>
   );
-}
+};

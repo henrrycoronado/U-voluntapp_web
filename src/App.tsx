@@ -12,7 +12,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
 
 // VISTAS DE TUS NUEVOS DOMINIOS (Features)
-import { ProgramsList } from './features/programas/views/ProgramList';
+import { ProgramList } from './features/programas/views/ProgramList';
+import { ProgramDetails } from './features/programas/views/ProgramDetails';
 import { ProfileForm } from './features/miembros/views/ProfileForm';
 
 function HomeRedirect() {
@@ -22,7 +23,7 @@ function HomeRedirect() {
     return <Navigate to="/login" replace />;
   }
 
-  if (hasAnyRole(['Volunteer', 'Coordinator', 'Admin'])) {
+  if (hasAnyRole(['Volunteer', 'Coordinator', 'Admin', 'SuperUser'])) {
     return <Navigate to="/programas" replace />;
   }
 
@@ -47,16 +48,16 @@ function App() {
           {/* 2. RUTAS DE NEGOCIO (Domain-Driven) */}
           <Route element={<AppLayout />}>
             {/* Dominio: Programas */}
-            <Route element={<GuardRole requiredRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
-              <Route path="/programas" element={<ProgramsList />} />
+            <Route element={<GuardRole requiredRoles={['Volunteer', 'Coordinator', 'Admin', 'SuperUser']} />}>
+              <Route path="/programas" element={<ProgramList />} />
+              <Route path="/programas/:id" element={<ProgramDetails />} />
             </Route>
 
             {/* Dominio: Miembros (Perfil) */}
-            <Route element={<GuardRole requiredRoles={['Volunteer', 'Coordinator', 'Admin']} />}>
+            <Route element={<GuardRole requiredRoles={['Volunteer', 'Coordinator', 'Admin', 'SuperUser']} />}>
               <Route path="/perfil" element={<ProfileForm />} />
             </Route>
 
-            {/* Aquí Henrry irá conectando las demás vistas de Actividades y Reportes */}
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

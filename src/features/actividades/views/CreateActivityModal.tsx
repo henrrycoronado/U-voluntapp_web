@@ -1,137 +1,56 @@
-import { useState } from 'react';
-import { AxiosError } from 'axios';
-import { Modal, Button, Alert } from '../../../shared/components';
-import { activitiesApi } from '../../../service/api';
+import React, { useState } from 'react';
+import { Modal, Input, Button, Alert } from '../../../shared/components';
+import apiClient from '../../../shared/services/client';
 
 interface CreateActivityModalProps {
   isOpen: boolean;
   onClose: () => void;
-  programId: number;
-  onActivityCreated?: () => void;
 }
 
-export function CreateActivityModal({
-  isOpen,
-  onClose,
-  programId,
-  onActivityCreated,
-}: CreateActivityModalProps) {
-  const [loading, setLoading] = useState(false);
+export const CreateActivityModal = ({ isOpen, onClose }: CreateActivityModalProps) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    startDate: '',
-    endDate: '',
-  });
+  const [formData, setFormData] = useState({ name: '', description: '' });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     setError(null);
 
-    if (!formData.name.trim()) {
-      setError('El nombre de la actividad es requerido');
-      return;
-    }
-
-    if (!formData.startDate || !formData.endDate) {
-      setError('Las fechas de inicio y fin son requeridas');
-      return;
-    }
-
     try {
-      setLoading(true);
-
-      // Convert datetime-local format to ISO 8601
-      const startDate = new Date(formData.startDate).toISOString();
-      const endDate = new Date(formData.endDate).toISOString();
-
-      const payload = {
-        programId: programId,
-        activityTypeId: 1,
-        name: formData.name.trim(),
-        startDate: startDate,
-        endDate: endDate,
-        requiresEnrollment: true,
-        requiresApproval: false,
-      };
-      await activitiesApi.createSimple(payload);
-
-      setFormData({ name: '', startDate: '', endDate: '' });
-      onActivityCreated?.();
-    } catch (error: unknown) {
-      console.error('Error creating activity:', error);
-      let errorMessage = 'Error al crear la actividad';
-      if (error instanceof AxiosError) {
-        errorMessage =
-          error.response?.data?.message ||
-          error.response?.data?.error ||
-          error.message ||
-          errorMessage;
-      } else if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      setError(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
+      // RUTA Y PAYLOAD CORREGIDOS (Coincide con CreateProgramRequest):
+      await apiClient.post('/api/v1/programs', {
+        name: formData.name,
+        description: formData.description
+      });
+      
+      setFormData({ name: '', description: '' });
+      onClose();
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Error interno del servidor al guardar el programa.');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md" title="Crear Nueva Actividad">
-      {error && <Alert type="error" message={error} />}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Nombre de la Actividad
-          </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder="Ej: Limpieza del parque"
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-            disabled={loading}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Fecha de Inicio
-            </label>
-            <input
-              type="datetime-local"
-              value={formData.startDate}
-              onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Fecha de Fin
-            </label>
-            <input
-              type="datetime-local"
-              value={formData.endDate}
-              onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
-              disabled={loading}
-            />
-          </div>
-        </div>
-
-        <div className="flex gap-3 justify-end pt-4">
-          <Button variant="secondary" onClick={onClose} disabled={loading}>
-            Cancelar
-          </Button>
-          <Button variant="primary" type="submit" disabled={loading}>
-            {loading ? 'Creando...' : 'Crear Actividad'}
+    <Modal isOpen={isOpen} onClose={onClose} title="Crear Nuevo Programa">
+      {error && <Alert variant="error" className="mb-4 bg-red-950 border-red-900 text-red-400 text-xs">{error}</Alert>}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <Input label="Nombre del Programa" type="text" name="name" value={formData.name} onChange={handleChange} required />
+        <Input label="Descripción Breve" type="text" name="description" value={formData.description} onChange={handleChange} required />
+        <div className="flex gap-3 justify-end mt-4 pt-4 border-t border-zinc-800/50">
+          <button type="button" onClick={onClose} className="text-xs px-4 py-2 text-zinc-400 hover:text-white transition-colors">Cancelar</button>
+          <Button variant="primary" type="submit" className="!w-auto px-6" disabled={isLoading}>
+            {isLoading ? 'Guardando...' : 'Crear Programa'}
           </Button>
         </div>
       </form>
     </Modal>
   );
-}
+};

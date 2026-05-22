@@ -1,81 +1,91 @@
-import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
-import { Card, Button, Alert } from '../../../shared/components';
-import { programsApi, type Program } from '../services/programsApi';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Search, Plus } from 'lucide-react';
+import { Button, Card, StatusBadge } from '../../../shared/components';
+import apiClient from '../../../shared/services/client';
+import { useAuthStore } from '../../../app/store/authStore';
+import { CreateActivityModal } from '../../actividades/views/CreateActivityModal';
 
-interface ProgramsListProps {
-  onSelectProgram?: (program: Program) => void;
-}
+export const ProgramList = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { role } = useAuthStore();
+  const [programs, setPrograms] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-export function ProgramsList({ onSelectProgram }: ProgramsListProps) {
-  const [programs, setPrograms] = useState<Program[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadPrograms();
-  }, []);
-
-  const loadPrograms = async () => {
+  const fetchPrograms = async () => {
     try {
-      setLoading(true);
-      const response = await programsApi.getAll();
-      setPrograms((response.data.data as unknown as Program[]) || []);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar programas');
-      setPrograms([]);
+      const response = await apiClient.get('/api/v1/programs');
+      setPrograms(response.data.data || response.data);
+    } catch (error) {
+      console.error('Error al cargar programas reales:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  if (loading) {
-    return <Card className="p-6 text-center">Cargando programas...</Card>;
-  }
+  useEffect(() => {
+    fetchPrograms();
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setIsModalOpen(params.get('crear') === 'true');
+  }, [location.search]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    navigate('/programas', { replace: true });
+    fetchPrograms();
+  };
 
   return (
-    <Card className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Explorar Programas</h3>
-        <Button variant="primary" size="sm" className="flex items-center gap-2">
-          <Plus size={16} /> Nuevo Programa
-        </Button>
+    <div className="p-4 md:p-10 w-full max-w-7xl mx-auto text-white">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">Explorar Oportunidades</h1>
+        {(role === 'Coordinator' || role === 'SuperUser' || role === 'Admin') && (
+          <Button variant="primary" className="!w-auto px-4" onClick={() => navigate('/programas?crear=true')}>
+            <Plus size={18} className="mr-1" /> Nuevo
+          </Button>
+        )}
+      </div>
+      
+      <div className="flex flex-wrap gap-4 mb-8">
+        <div className="relative w-full md:w-[320px]">
+          <Search className="absolute left-3 top-3 text-zinc-500" size={16} />
+          <input 
+            type="text" 
+            placeholder="Buscar programas reales..." 
+            className="w-full bg-[#18181b] border border-zinc-800/80 rounded-lg py-2.5 pl-10 pr-4 focus:outline-none focus:border-yellow-500 text-sm text-white placeholder-zinc-500"
+          />
+        </div>
       </div>
 
-      {error && <Alert type="error" message={error} />}
-
-      {programs.length === 0 ? (
-        <p className="text-center text-gray-500 dark:text-gray-400">No hay programas disponibles</p>
+      {isLoading ? (
+        <div className="text-zinc-500 text-center py-10">Cargando base de datos...</div>
+      ) : programs.length === 0 ? (
+        <div className="text-zinc-500 text-center py-10 border border-dashed border-zinc-800 rounded-xl">
+          No hay programas creados aún. ¡Crea el primero!
+        </div>
       ) : (
-        <div className="grid gap-4">
-          {programs.map((program) => (
-            <div
-              key={program.id}
-              onClick={() => onSelectProgram?.(program)}
-              className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400">
-                    {program.name}
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    {program.description}
-                  </p>
-                  <div className="flex gap-4 text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    <span>Estado: {program.state}</span>
-                    <span>ID: {program.id}</span>
-                  </div>
-                </div>
-                <span className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100 rounded ml-4">
-                  Ver detalles
-                </span>
-              </div>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {programs.map((prog: any) => (
+            <Card key={prog.id} className="flex flex-col h-full p-6 hover:border-yellow-500/30 transition-colors cursor-pointer" onClick={() => navigate(`/programas/${prog.id}`)}>
+              <StatusBadge text={prog.state || 'ACTIVO'} type="default" />
+              <h2 className="text-lg font-bold mt-4 mb-2">{prog.name}</h2>
+              <p className="text-sm text-zinc-400 mb-6 flex-grow leading-relaxed line-clamp-3">
+                {prog.description || 'Sin descripción.'}
+              </p>
+              <Button variant="outline" onClick={(e: any) => { e.stopPropagation(); navigate(`/programas/${prog.id}`); }}>
+                Ver Detalles
+              </Button>
+            </Card>
           ))}
         </div>
       )}
-    </Card>
+
+      <CreateActivityModal isOpen={isModalOpen} onClose={handleCloseModal} />
+    </div>
   );
-}
+};

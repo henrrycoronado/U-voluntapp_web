@@ -25,6 +25,7 @@ function parseRolesFromToken(token: string): UserRole[] {
 interface AuthStore {
   user: AuthUser | null;
   token: string | null;
+  role: UserRole | null;
   isAuthenticated: boolean;
   setAuth: (user: AuthUser) => void;
   logout: () => Promise<void>;
@@ -37,10 +38,12 @@ export const useAuthStore = create<AuthStore>()(
     (set, get) => ({
       user: null,
       token: null,
+      role: null,
       isAuthenticated: false,
 
       setAuth: (user: AuthUser) => {
         const resolvedRoles = user.roles?.length ? user.roles : parseRolesFromToken(user.token);
+        const primaryRole = resolvedRoles.length > 0 ? resolvedRoles[0] : null;
 
         set({
           user: {
@@ -48,6 +51,7 @@ export const useAuthStore = create<AuthStore>()(
             roles: resolvedRoles,
           },
           token: user.token,
+          role: primaryRole,
           isAuthenticated: true,
         });
       },
@@ -69,6 +73,7 @@ export const useAuthStore = create<AuthStore>()(
         set({
           user: null,
           token: null,
+          role: null,
           isAuthenticated: false,
         });
       },
@@ -88,6 +93,7 @@ export const useAuthStore = create<AuthStore>()(
       partialize: (state) => ({
         user: state.user,
         token: state.token,
+        role: state.role,
         isAuthenticated: state.isAuthenticated,
       }),
     }
