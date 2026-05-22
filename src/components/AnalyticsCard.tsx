@@ -1,40 +1,33 @@
-import type { ReactNode } from 'react';
+import React from 'react';
+import { Card } from './Card';
 
 interface AnalyticsCardProps {
   title: string;
   value: string | number;
-  icon: ReactNode;
-  color: 'red' | 'blue' | 'green' | 'yellow';
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
+  icon: React.ReactNode;
+  trend?: string;
+  trendUp?: boolean;
 }
 
-export default function AnalyticsCard({ title, value, icon, color, trend }: AnalyticsCardProps) {
-  const colorClasses = {
-    red: 'bg-brand-red/10 dark:bg-brand-red/20 text-brand-red',
-    blue: 'bg-brand-blue/10 dark:bg-brand-blue/20 text-brand-blue',
-    green: 'bg-brand-green/10 dark:bg-brand-green/20 text-brand-green',
-    yellow: 'bg-brand-yellow/10 dark:bg-brand-yellow/20 text-brand-yellow',
-  };
-
+export const AnalyticsCard = ({ title, value, icon, trend, trendUp }: AnalyticsCardProps) => {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+    <Card className="p-6 flex flex-col gap-4 bg-[#121214] hover:border-zinc-700 transition-colors">
       <div className="flex items-center justify-between">
-        <div>
-          <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{value}</p>
-          {trend && (
-            <p
-              className={`text-sm mt-2 ${trend.isPositive ? 'text-brand-green' : 'text-brand-red'}`}
-            >
-              {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%
-            </p>
-          )}
+        <span className="text-sm font-medium text-zinc-400">{title}</span>
+        <div className="text-yellow-500 bg-yellow-500/10 p-2.5 rounded-lg border border-yellow-500/20">
+          {icon}
         </div>
-        <div className={`${colorClasses[color]} p-4 rounded-lg`}>{icon}</div>
       </div>
-    </div>
+      <div className="flex items-end justify-between mt-2">
+        <span className="text-3xl font-bold text-white tracking-tight">{value}</span>
+        {trend && (
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-md ${trendUp ? 'text-green-400 bg-green-400/10' : 'text-red-400 bg-red-400/10'}`}
+          >
+            {trendUp ? '↑' : '↓'} {trend}
+          </span>
+        )}
+      </div>
+    </Card>
   );
-}
+};

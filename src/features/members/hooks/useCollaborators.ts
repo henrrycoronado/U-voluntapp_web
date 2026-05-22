@@ -1,0 +1,60 @@
+import { useEffect, useState } from 'react';
+import type { ProgramCollaborator } from '../services/collaboratorsApi';
+import { collaboratorsApi } from '../services/collaboratorsApi';
+import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
+
+export function useCollaboratorById(id: number) {
+  const [data, setData] = useState<ProgramCollaborator | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchCollaborator = async () => {
+      try {
+        setLoading(true);
+        const response = await collaboratorsApi.getById(id);
+        setData(response.data as ProgramCollaborator);
+        setError(null);
+      } catch (err) {
+        setError(getErrorMessage(err));
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCollaborator();
+  }, [id]);
+
+  return { data, loading, error };
+}
+
+export function useCollaboratorsByProgram(programId: number) {
+  const [data, setData] = useState<ProgramCollaborator[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!programId) return;
+
+    const fetchCollaborators = async () => {
+      try {
+        setLoading(true);
+        const response = await collaboratorsApi.getByProgram(programId);
+        setData(response.data as ProgramCollaborator[]);
+        setError(null);
+      } catch (err) {
+        setError(getErrorMessage(err));
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCollaborators();
+  }, [programId]);
+
+  return { data, loading, error };
+}

@@ -1,53 +1,48 @@
 import { validators } from './validators';
 
 /**
- * Validación para actualización de perfil de voluntario
+ * Validation for volunteer profile updates.
  */
 export const validateVolunteerProfile = (profile: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar firstName
   if (profile.firstName !== undefined && profile.firstName !== '') {
     const firstName = profile.firstName as string;
     if (firstName.trim().length === 0) {
-      errors.firstName = 'El nombre es requerido';
+      errors.firstName = 'First name is required';
     } else if (firstName.length > 100) {
-      errors.firstName = 'El nombre no puede exceder 100 caracteres';
+      errors.firstName = 'First name cannot exceed 100 characters';
     }
   }
 
-  // Validar lastName
   if (profile.lastName !== undefined && profile.lastName !== '') {
     const lastName = profile.lastName as string;
     if (lastName.trim().length === 0) {
-      errors.lastName = 'El apellido es requerido';
+      errors.lastName = 'Last name is required';
     } else if (lastName.length > 100) {
-      errors.lastName = 'El apellido no puede exceder 100 caracteres';
+      errors.lastName = 'Last name cannot exceed 100 characters';
     }
   }
 
-  // Validar phone
   if (profile.phone !== undefined && profile.phone !== '') {
     if (!validators.phone(profile.phone)) {
-      errors.phone = 'Teléfono inválido. Debe contener al menos 7 dígitos';
+      errors.phone = 'Invalid phone number. It must contain at least 7 digits';
     }
   }
 
-  // Validar housingLocation
   if (profile.housingLocation !== undefined && profile.housingLocation !== '') {
     const location = profile.housingLocation as string;
     if (location.length > 200) {
-      errors.housingLocation = 'La ubicación no puede exceder 200 caracteres';
+      errors.housingLocation = 'Location cannot exceed 200 characters';
     }
   }
 
-  // Validar personalGoalHours
   if (profile.personalGoalHours !== undefined) {
     const hours = profile.personalGoalHours as number;
     if (isNaN(hours) || hours < 0) {
-      errors.personalGoalHours = 'Las horas objetivas deben ser un número positivo';
+      errors.personalGoalHours = 'Goal hours must be a positive number';
     } else if (hours > 10000) {
-      errors.personalGoalHours = 'Las horas objetivas no pueden exceder 10000';
+      errors.personalGoalHours = 'Goal hours cannot exceed 10000';
     }
   }
 
@@ -55,45 +50,42 @@ export const validateVolunteerProfile = (profile: Record<string, unknown>) => {
 };
 
 /**
- * Validación para solicitud de inscripción en actividad
+ * Validation for activity enrollment requests.
  */
 export const validateEnrollmentRequest = (enrollment: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar activityId
   if (!enrollment.activityId) {
-    errors.activityId = 'Se requiere seleccionar una actividad';
+    errors.activityId = 'You must select an activity';
   } else if (typeof enrollment.activityId !== 'number' || enrollment.activityId <= 0) {
-    errors.activityId = 'El ID de la actividad no es válido';
+    errors.activityId = 'The activity ID is not valid';
   }
 
   return Object.keys(errors).length > 0 ? errors : null;
 };
 
 /**
- * Validación para solicitud de rol coordinador
+ * Validation for coordinator role requests.
  */
 export const validateRoleRequest = (request: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar reason
   if (!request.reason) {
-    errors.reason = 'Debes proporcionar un motivo para la solicitud';
+    errors.reason = 'You must provide a reason for the request';
   } else if (typeof request.reason === 'string') {
     if (request.reason.trim().length === 0) {
-      errors.reason = 'El motivo no puede estar vacío';
+      errors.reason = 'The reason cannot be empty';
     } else if (request.reason.length < 10) {
-      errors.reason = 'El motivo debe tener al menos 10 caracteres';
+      errors.reason = 'The reason must have at least 10 characters';
     } else if (request.reason.length > 1000) {
-      errors.reason = 'El motivo no puede exceder 1000 caracteres';
+      errors.reason = 'The reason cannot exceed 1000 characters';
     }
   }
 
-  // Validar months
   if (request.months !== undefined) {
     const months = request.months as number;
     if (isNaN(months) || months < 1 || months > 36) {
-      errors.months = 'La duración debe estar entre 1 y 36 meses';
+      errors.months = 'The duration must be between 1 and 36 months';
     }
   }
 
@@ -101,11 +93,11 @@ export const validateRoleRequest = (request: Record<string, unknown>) => {
 };
 
 /**
- * Validación para cancelación de inscripción
+ * Validation for enrollment cancellation.
  */
 export const validateCancelEnrollment = (enrollmentId: unknown) => {
   if (!enrollmentId || typeof enrollmentId !== 'number' || enrollmentId <= 0) {
-    return 'ID de inscripción inválido';
+    return 'Invalid enrollment ID';
   }
   return null;
 };

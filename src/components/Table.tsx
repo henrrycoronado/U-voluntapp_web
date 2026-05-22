@@ -1,82 +1,49 @@
-import type { ReactNode } from 'react';
+import React from 'react';
 
-interface Column<T = Record<string, unknown>> {
-  key: string;
-  label: string;
-  render?: (value: unknown, row: T) => ReactNode;
-}
+export const Table = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div
+    className={`w-full overflow-x-auto rounded-xl border border-zinc-800/80 bg-[#121214] ${className}`}
+  >
+    <table className="w-full text-left text-sm text-zinc-300 whitespace-nowrap">{children}</table>
+  </div>
+);
 
-interface TableProps<T = Record<string, unknown>> {
-  columns: Column<T>[];
-  data: T[];
-  loading?: boolean;
-  empty?: string;
-}
+export const Thead = ({ children }: { children: React.ReactNode }) => (
+  <thead className="bg-[#18181b] text-xs uppercase text-zinc-500 border-b border-zinc-800/80">
+    {children}
+  </thead>
+);
 
-export default function Table<T = Record<string, unknown>>({
-  columns,
-  data,
-  loading = false,
-  empty = 'No hay datos',
-}: TableProps<T>) {
-  if (loading) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="flex justify-center items-center h-40">
-          <div className="text-gray-500 dark:text-gray-400">Cargando...</div>
-        </div>
-      </div>
-    );
-  }
+export const Tbody = ({ children }: { children: React.ReactNode }) => (
+  <tbody className="divide-y divide-zinc-800/80">{children}</tbody>
+);
 
-  if (data.length === 0) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="flex justify-center items-center h-40">
-          <div className="text-gray-500 dark:text-gray-400">{empty}</div>
-        </div>
-      </div>
-    );
-  }
+export const Tr = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <tr className={`hover:bg-[#18181b]/50 transition-colors ${className}`}>{children}</tr>;
 
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-            <tr>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-gray-100"
-                >
-                  {col.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {data.map((row, idx) => (
-              <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                {columns.map((col) => {
-                  const rowRecord = row as Record<string, unknown>;
-                  const cellContent = col.render
-                    ? (col.render(rowRecord[col.key], row) as React.ReactNode)
-                    : (rowRecord[col.key] as React.ReactNode);
-                  return (
-                    <td
-                      key={col.key}
-                      className="px-6 py-4 text-sm text-gray-900 dark:text-gray-100"
-                    >
-                      {cellContent}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+export const Th = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <th className={`px-6 py-4 font-semibold tracking-wider ${className}`}>{children}</th>;
+
+export const Td = ({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <td className={`px-6 py-4 ${className}`}>{children}</td>;
