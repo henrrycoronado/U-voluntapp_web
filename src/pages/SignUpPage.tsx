@@ -13,7 +13,7 @@ export const SignUpPage = () => {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -33,7 +33,7 @@ export const SignUpPage = () => {
 
       await register(payload);
       navigate('/programs');
-    } catch (err: any) {
+    } catch {
       // Error is already handled in the hook
     }
   };
@@ -44,11 +44,13 @@ export const SignUpPage = () => {
     <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center font-sans text-white py-10">
       <div className="mb-8 flex items-center gap-2">
         <div className="w-8 h-8 flex items-center justify-center bg-yellow-500 rounded-md">
-           <span className="text-black font-bold text-lg">U</span>
+          <span className="text-black font-bold text-lg">U</span>
         </div>
-        <span className="text-2xl font-bold tracking-tight">U-Volunt<span className="text-yellow-500">App</span></span>
+        <span className="text-2xl font-bold tracking-tight">
+          U-Volunt<span className="text-yellow-500">App</span>
+        </span>
       </div>
-      
+
       <div className="bg-[#18181b] p-8 rounded-2xl border border-zinc-800/80 w-full max-w-[400px] shadow-xl">
         <div className="text-center mb-8">
           <h1 className="text-xl font-bold mb-1">Create your account</h1>
@@ -60,48 +62,48 @@ export const SignUpPage = () => {
             {displayError}
           </Alert>
         )}
-        
+
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
-            <Input 
-              label="First Name" 
-              type="text" 
+            <Input
+              label="First Name"
+              type="text"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              placeholder="Daniel" 
+              placeholder="Daniel"
               required
             />
-            <Input 
-              label="Last Name" 
-              type="text" 
+            <Input
+              label="Last Name"
+              type="text"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder="Irigoyen" 
+              placeholder="Irigoyen"
               required
             />
           </div>
-          
-          <Input 
-            label="Institutional Email" 
-            type="email" 
+
+          <Input
+            label="Institutional Email"
+            type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="daniel@ucb.edu.bo" 
+            placeholder="daniel@ucb.edu.bo"
             required
           />
-          <Input 
-            label="Password" 
-            type="password" 
+          <Input
+            label="Password"
+            type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Min. 8 characters" 
+            placeholder="Min. 8 characters"
             required
           />
-          
+
           <div className="mt-6 flex items-center justify-between">
             <Link to="/login" className="text-xs text-zinc-400 hover:text-white transition-colors">
               I already have an account

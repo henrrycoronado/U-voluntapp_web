@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Program } from '../services/programsApi';
+import type { Program, CreateProgramRequest } from '../services/programsApi';
 import { programsApi } from '../services/programsApi';
 import { getErrorMessage } from '../../../utils/exceptions/errorHandler';
 
@@ -33,7 +33,7 @@ export function useCreateProgram() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createProgram = async (data: any) => {
+  const createProgram = async (data: CreateProgramRequest) => {
     setIsLoading(true);
     setError(null);
     try {
