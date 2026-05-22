@@ -1,40 +1,26 @@
-import type { ReactNode } from 'react';
-import { useState } from 'react';
-
-interface Tab {
-  id: string;
-  label: string;
-  content: ReactNode;
-}
-
 interface TabsProps {
-  tabs: Tab[];
-  defaultTab?: string;
+  tabs: string[];
+  activeTab: string;
+  onTabChange: (tab: string) => void;
 }
 
-export default function Tabs({ tabs, defaultTab }: TabsProps) {
-  const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id || '');
-
-  const activeTabData = tabs.find((tab) => tab.id === activeTab);
-
+export const Tabs = ({ tabs, activeTab, onTabChange }: TabsProps) => {
   return (
-    <div>
-      <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 font-medium transition border-b-2 ${
-              activeTab === tab.id
-                ? 'border-brand-blue text-brand-blue'
-                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-300'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      <div className="mt-4">{activeTabData?.content}</div>
+    <div className="flex gap-6 border-b border-zinc-800/80 w-full mb-6 overflow-x-auto custom-scrollbar">
+      {tabs.map((tab) => (
+        <button
+          key={tab}
+          onClick={() => onTabChange(tab)}
+          className={`pb-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+            activeTab === tab ? 'text-yellow-500' : 'text-zinc-500 hover:text-zinc-300'
+          }`}
+        >
+          {tab}
+          {activeTab === tab && (
+            <div className="absolute bottom-[-1px] left-0 w-full h-[2px] bg-yellow-500 rounded-t-full"></div>
+          )}
+        </button>
+      ))}
     </div>
   );
-}
+};

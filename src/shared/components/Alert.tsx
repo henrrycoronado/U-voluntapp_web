@@ -1,26 +1,12 @@
-interface AlertProps {
-  type: 'success' | 'error' | 'warning' | 'info';
-  message: string;
-}
-
-export default function Alert({ type, message }: AlertProps) {
-  const bgColor = {
-    success: 'bg-brand-green/10 dark:bg-brand-green/20 border-brand-green',
-    error: 'bg-brand-red/10 dark:bg-brand-red/20 border-brand-red',
-    warning: 'bg-brand-yellow/10 dark:bg-brand-yellow/20 border-brand-yellow',
-    info: 'bg-brand-blue/10 dark:bg-brand-blue/20 border-brand-blue',
-  };
-
-  const textColor = {
-    success: 'text-brand-green dark:text-brand-green',
-    error: 'text-brand-red dark:text-brand-red',
-    warning: 'text-brand-yellow dark:text-brand-yellow',
-    info: 'text-brand-blue dark:text-brand-blue',
+export const Alert = ({ children, variant = 'success', className = '' }: any) => {
+  const variants: any = {
+    success: "bg-[#062c14] border border-[#166534] text-[#4ade80]",
+    error: "bg-red-950 border border-red-900 text-red-400",
   };
 
   return (
-    <div className={`border ${bgColor[type]} rounded-lg p-4 mb-4`}>
-      <p className={`${textColor[type]} text-sm font-medium`}>{message}</p>
+    <div className={`flex items-start gap-3 p-4 rounded-xl ${variants[variant]} ${className}`}>
+      {children}
     </div>
   );
-}
+};
