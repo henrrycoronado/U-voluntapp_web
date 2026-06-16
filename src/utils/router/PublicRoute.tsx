@@ -1,14 +1,12 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '../../app/store/authStore';
 
-export const PublicRoute = () => {
-  const { token, user } = useAuthStore();
+export function PublicRoute() {
+  const { isAuthenticated } = useAuthStore();
 
-  if (token) {
-    const primaryRole = user?.roles?.[0]?.toLowerCase() || 'volunteer';
-
-    return <Navigate to={`/${primaryRole}`} replace />;
+  if (isAuthenticated) {
+    return <Navigate to="/programs" replace />;
   }
 
   return <Outlet />;
-};
+}

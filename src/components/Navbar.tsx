@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../utils/store/authStore';
-import { useThemeStore } from '../utils/store/themeStore';
+import { useAuthStore } from '../app/store/authStore';
+import { useThemeStore } from '../app/store/themeStore';
 import { LogOut, Moon, Sun } from 'lucide-react';
 
 export default function Navbar() {
@@ -36,7 +36,7 @@ export default function Navbar() {
           className="flex items-center gap-2 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition"
         >
           <LogOut size={20} />
-          Cerrar sesión
+          Log out
         </button>
       </div>
     </nav>

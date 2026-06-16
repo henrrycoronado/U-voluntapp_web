@@ -1,44 +1,27 @@
-import type { ButtonHTMLAttributes } from 'react';
+import React from 'react';
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success';
-  size?: 'sm' | 'md' | 'lg';
-  isLoading?: boolean;
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
+  variant?: 'primary' | 'outline' | 'disabled';
 }
 
-export default function Button({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
+export const Button = ({
   children,
+  variant = 'primary',
   className = '',
-  disabled,
   ...props
-}: ButtonProps) {
-  const baseClasses =
-    'font-medium rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
-
-  const variantClasses = {
-    primary: 'bg-brand-blue text-white hover:bg-brand-blue/90 dark:hover:bg-brand-blue/80',
-    secondary:
-      'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600',
-    danger: 'bg-brand-red text-white hover:bg-brand-red/90 dark:hover:bg-brand-red/80',
-    success: 'bg-brand-green text-white hover:bg-brand-green/90 dark:hover:bg-brand-green/80',
-  };
-
-  const sizeClasses = {
-    sm: 'px-3 py-1 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+}: ButtonProps) => {
+  const baseStyle =
+    'w-full rounded-md py-2.5 px-4 font-semibold transition-colors text-sm flex items-center justify-center gap-2';
+  const variants = {
+    primary: 'bg-yellow-500 text-black hover:bg-yellow-400',
+    outline: 'border border-zinc-800 text-white hover:bg-zinc-800',
+    disabled: 'bg-zinc-900 text-zinc-500 cursor-not-allowed border border-zinc-800',
   };
 
   return (
-    <button
-      {...props}
-      disabled={disabled || isLoading}
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-    >
-      {isLoading ? 'Cargando...' : children}
+    <button className={`${baseStyle} ${variants[variant]} ${className}`} {...props}>
+      {children}
     </button>
   );
-}
+};

@@ -1,98 +1,94 @@
-import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../utils/store/authStore';
-import { useThemeStore } from '../utils/store/themeStore';
-import type { LoginRequest } from '../service/types/auth';
-import { Card, Button, Input, Alert } from '../components';
-import { useForm } from '../service/hooks/useForm';
-import { authApi } from '../service/api/auth';
-import { validateForm, validators } from '../utils/validations/validators';
-import { getErrorMessage } from '../utils/exceptions/errorHandler';
-import { Moon, Sun } from 'lucide-react';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Input } from '../components/Input';
+import { Button } from '../components/Button';
+import { Alert } from '../components/Alert';
+import { useLogin } from '../service/hooks/useAuth';
 
-export default function LoginPage() {
+export const LoginPage = () => {
   const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
-  const { theme, toggleTheme } = useThemeStore();
+  const { login, isLoading, error: loginError } = useLogin();
 
-  const { values, errors, isSubmitting, submitError, handleChange, handleSubmit } = useForm({
-    initialValues: { email: '', password: '' },
-    validate: (vals: Record<string, string>) =>
-      validateForm(vals, {
-        email: [[validators.email, 'Email inválido']],
-        password: [[validators.required, 'La contraseña es requerida']],
-      }),
-    onSubmit: async (vals: Record<string, string>) => {
-      try {
-        const response = await authApi.login(vals as unknown as LoginRequest);
-        setAuth(response.data);
-        navigate('/volunteer');
-      } catch (error) {
-        throw new Error(getErrorMessage(error));
-      }
-    },
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      await login(formData);
+      navigate('/programs');
+    } catch {
+      // Error is already handled in the hook, but we can set local error if needed or use the hook's error
+    }
+  };
+
+  const displayError = loginError || error;
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-brand-blue/10 to-brand-blue/5 dark:from-gray-900 dark:to-gray-800 transition-colors">
-      <div className="absolute top-4 right-4">
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-lg bg-white dark:bg-gray-800 shadow hover:shadow-lg transition"
-        >
-          {theme === 'light' ? (
-            <Moon size={20} className="text-gray-600" />
-          ) : (
-            <Sun size={20} className="text-yellow-400" />
-          )}
-        </button>
+    <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center font-sans text-white">
+      <div className="mb-8 flex items-center gap-2">
+        <div className="w-8 h-8 flex items-center justify-center bg-yellow-500 rounded-md">
+          <span className="text-black font-bold text-lg">U</span>
+        </div>
+        <span className="text-2xl font-bold tracking-tight">
+          U-Volunt<span className="text-yellow-500">App</span>
+        </span>
       </div>
 
-      <Card className="w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-2">
-          U-Voluntapp
-        </h1>
-        <p className="text-center text-gray-600 dark:text-gray-400 mb-8">
-          Inicia sesión en tu cuenta
-        </p>
+      <div className="bg-[#18181b] p-8 rounded-2xl border border-zinc-800/80 w-full max-w-[400px] shadow-xl">
+        <div className="text-center mb-8">
+          <h1 className="text-xl font-bold mb-1">Sign In</h1>
+          <p className="text-xs text-zinc-400">Enter your account to continue helping.</p>
+        </div>
 
-        {submitError && <Alert type="error" message={submitError} />}
+        {displayError && (
+          <Alert variant="error" className="mb-6 bg-red-950 border-red-900 text-red-400">
+            {displayError}
+          </Alert>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <Input
             label="Email"
             type="email"
             name="email"
-            placeholder="tu@email.com"
-            value={values.email}
+            value={formData.email}
             onChange={handleChange}
-            error={errors.email}
+            placeholder="admin@ucb.edu.bo"
+            required
           />
-
           <Input
-            label="Contraseña"
+            label="Password"
             type="password"
             name="password"
-            placeholder="••••••••"
-            value={values.password}
+            value={formData.password}
             onChange={handleChange}
-            error={errors.password}
+            placeholder="••••••••"
+            required
           />
 
-          <Button type="submit" className="w-full" isLoading={isSubmitting}>
-            Iniciar sesión
-          </Button>
+          <div className="mt-2">
+            <Button variant="primary" type="submit" disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
+          </div>
         </form>
 
-        <p className="text-center text-gray-600 dark:text-gray-400 mt-6">
-          ¿No tienes cuenta?{' '}
-          <a
-            href="/signup"
-            className="text-brand-blue dark:text-brand-blue hover:underline font-medium"
-          >
-            Regístrate aquí
-          </a>
-        </p>
-      </Card>
+        <div className="mt-6 text-center text-xs text-zinc-400">
+          Don't have an account?{' '}
+          <Link to="/signup" className="text-yellow-500 hover:underline">
+            Sign up
+          </Link>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

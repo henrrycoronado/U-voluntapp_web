@@ -1,38 +1,35 @@
 /**
- * Validación para creación/actualización de programas
+ * Validation for program creation and updates.
  */
 export const validateProgram = (program: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar name
   if (!program.name) {
-    errors.name = 'El nombre del programa es requerido';
+    errors.name = 'Program name is required';
   } else if (typeof program.name === 'string') {
     const name = program.name.trim();
     if (name.length === 0) {
-      errors.name = 'El nombre del programa no puede estar vacío';
+      errors.name = 'Program name cannot be empty';
     } else if (name.length < 3) {
-      errors.name = 'El nombre debe tener al menos 3 caracteres';
+      errors.name = 'The name must have at least 3 characters';
     } else if (name.length > 200) {
-      errors.name = 'El nombre no puede exceder 200 caracteres';
+      errors.name = 'The name cannot exceed 200 characters';
     }
   }
 
-  // Validar description
   if (program.description !== undefined && program.description !== '') {
     const description = program.description as string;
     if (description.length < 10) {
-      errors.description = 'La descripción debe tener al menos 10 caracteres';
+      errors.description = 'The description must have at least 10 characters';
     } else if (description.length > 2000) {
-      errors.description = 'La descripción no puede exceder 2000 caracteres';
+      errors.description = 'The description cannot exceed 2000 characters';
     }
   }
 
-  // Validar acronym
   if (program.acronym !== undefined && program.acronym !== '') {
     const acronym = program.acronym as string;
     if (acronym.length < 2 || acronym.length > 10) {
-      errors.acronym = 'El acrónimo debe tener entre 2 y 10 caracteres';
+      errors.acronym = 'The acronym must be between 2 and 10 characters';
     }
   }
 
@@ -40,65 +37,59 @@ export const validateProgram = (program: Record<string, unknown>) => {
 };
 
 /**
- * Validación para creación/actualización de actividades
+ * Validation for activity creation and updates.
  */
 export const validateActivity = (activity: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar programId
   if (!activity.programId || typeof activity.programId !== 'number' || activity.programId <= 0) {
-    errors.programId = 'Se debe seleccionar un programa válido';
+    errors.programId = 'You must select a valid program';
   }
 
-  // Validar name
   if (!activity.name) {
-    errors.name = 'El nombre de la actividad es requerido';
+    errors.name = 'Activity name is required';
   } else if (typeof activity.name === 'string') {
     const name = activity.name.trim();
     if (name.length === 0) {
-      errors.name = 'El nombre no puede estar vacío';
+      errors.name = 'Activity name cannot be empty';
     } else if (name.length < 3) {
-      errors.name = 'El nombre debe tener al menos 3 caracteres';
+      errors.name = 'The name must have at least 3 characters';
     } else if (name.length > 200) {
-      errors.name = 'El nombre no puede exceder 200 caracteres';
+      errors.name = 'The name cannot exceed 200 characters';
     }
   }
 
-  // Validar description
   if (activity.description !== undefined && activity.description !== '') {
     const description = activity.description as string;
     if (description.length > 2000) {
-      errors.description = 'La descripción no puede exceder 2000 caracteres';
+      errors.description = 'The description cannot exceed 2000 characters';
     }
   }
 
-  // Validar startDate
   if (activity.startDate !== undefined) {
     const startDate = new Date(activity.startDate as string);
     if (isNaN(startDate.getTime())) {
-      errors.startDate = 'Fecha de inicio inválida';
+      errors.startDate = 'Invalid start date';
     } else if (startDate < new Date()) {
-      errors.startDate = 'La fecha de inicio debe ser en el futuro';
+      errors.startDate = 'The start date must be in the future';
     }
   }
 
-  // Validar endDate
   if (activity.endDate !== undefined) {
     const endDate = new Date(activity.endDate as string);
     if (isNaN(endDate.getTime())) {
-      errors.endDate = 'Fecha de fin inválida';
+      errors.endDate = 'Invalid end date';
     } else if (activity.startDate && endDate <= new Date(activity.startDate as string)) {
-      errors.endDate = 'La fecha de fin debe ser posterior a la de inicio';
+      errors.endDate = 'The end date must be after the start date';
     }
   }
 
-  // Validar capacity
   if (activity.capacity !== undefined) {
     const capacity = activity.capacity as number;
     if (!Number.isInteger(capacity) || capacity < 1) {
-      errors.capacity = 'La capacidad debe ser un número entero positivo';
+      errors.capacity = 'Capacity must be a positive integer';
     } else if (capacity > 10000) {
-      errors.capacity = 'La capacidad no puede exceder 10000';
+      errors.capacity = 'Capacity cannot exceed 10000';
     }
   }
 
@@ -106,21 +97,20 @@ export const validateActivity = (activity: Record<string, unknown>) => {
 };
 
 /**
- * Validación para solicitud de rol admin
+ * Validation for admin role requests.
  */
 export const validateAdminRequest = (request: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar reason
   if (!request.reason) {
-    errors.reason = 'Debes proporcionar un motivo para la solicitud';
+    errors.reason = 'You must provide a reason for the request';
   } else if (typeof request.reason === 'string') {
     if (request.reason.trim().length === 0) {
-      errors.reason = 'El motivo no puede estar vacío';
+      errors.reason = 'The reason cannot be empty';
     } else if (request.reason.length < 10) {
-      errors.reason = 'El motivo debe tener al menos 10 caracteres';
+      errors.reason = 'The reason must have at least 10 characters';
     } else if (request.reason.length > 1500) {
-      errors.reason = 'El motivo no puede exceder 1500 caracteres';
+      errors.reason = 'The reason cannot exceed 1500 characters';
     }
   }
 
@@ -128,30 +118,27 @@ export const validateAdminRequest = (request: Record<string, unknown>) => {
 };
 
 /**
- * Validación para revisión de inscripciones
+ * Validation for enrollment reviews.
  */
 export const validateEnrollmentReview = (review: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar enrollmentId
   if (!review.enrollmentId || typeof review.enrollmentId !== 'number' || review.enrollmentId <= 0) {
-    errors.enrollmentId = 'ID de inscripción inválido';
+    errors.enrollmentId = 'Invalid enrollment ID';
   }
 
-  // Validar approved (booleano)
   if (review.approved === undefined || typeof review.approved !== 'boolean') {
-    errors.approved = 'Debes indicar si apruebas o rechazas la inscripción';
+    errors.approved = 'You must indicate whether you approve or reject the enrollment';
   }
 
-  // Si rechaza, validar reason
   if (review.approved === false && !review.reason) {
-    errors.reason = 'Debes proporcionar un motivo para rechazar';
+    errors.reason = 'You must provide a reason for rejection';
   } else if (review.reason !== undefined) {
     const reason = review.reason as string;
     if (reason && reason.length < 5) {
-      errors.reason = 'El motivo debe tener al menos 5 caracteres';
+      errors.reason = 'The reason must have at least 5 characters';
     } else if (reason && reason.length > 500) {
-      errors.reason = 'El motivo no puede exceder 500 caracteres';
+      errors.reason = 'The reason cannot exceed 500 characters';
     }
   }
 
@@ -159,30 +146,27 @@ export const validateEnrollmentReview = (review: Record<string, unknown>) => {
 };
 
 /**
- * Validación para agregar colaborador al programa
+ * Validation for adding a collaborator to a program.
  */
 export const validateAddCollaborator = (collaborator: Record<string, unknown>) => {
   const errors: Record<string, string> = {};
 
-  // Validar programId
   if (
     !collaborator.programId ||
     typeof collaborator.programId !== 'number' ||
     collaborator.programId <= 0
   ) {
-    errors.programId = 'ID de programa inválido';
+    errors.programId = 'Invalid program ID';
   }
 
-  // Validar profileId
   if (!collaborator.profileId) {
-    errors.profileId = 'Se debe seleccionar un perfil';
+    errors.profileId = 'You must select a profile';
   }
 
-  // Validar accessLevel (1-3)
   if (collaborator.accessLevel !== undefined) {
     const level = collaborator.accessLevel as number;
     if (!Number.isInteger(level) || level < 1 || level > 3) {
-      errors.accessLevel = 'El nivel de acceso debe estar entre 1 (Manager) y 3 (Viewer)';
+      errors.accessLevel = 'Access level must be between 1 (Manager) and 3 (Viewer)';
     }
   }
 

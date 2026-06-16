@@ -1,0 +1,57 @@
+name: Pipeline Develop (CI)
+
+on:
+  pull_request:
+    branches:
+      - develop
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: pipeline-develop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: U-voluntapp_web/package-lock.json
+
+      - name: Install dependencies
+        working-directory: U-voluntapp_web
+        run: npm ci
+
+      - name: Lint
+        working-directory: U-voluntapp_web
+        run: npm run lint
+
+      - name: Build (Type Check & Compilation)
+        working-directory: U-voluntapp_web
+        run: npm run build
+
+      - name: Build Temporary Image for Scan
+        run: |
+          docker build -t uvoluntapp-web:scan -f U-voluntapp_web/Dockerfile U-voluntapp_web/
+
+      - name: Security Scan (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'uvoluntapp-web:scan'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'

@@ -1,262 +1,157 @@
 # U-Voluntapp Web - Frontend
 
-## Descripción
-Aplicación frontend moderna para gestión de programas y actividades de voluntariado. Permite a voluntarios, coordinadores y administradores colaborar de manera eficiente en iniciativas de impacto social.
+## Description
 
-## Stack Tecnológico
-- **React 18** con TypeScript para tipado estricto
-- **Vite** como empaquetador ultrarrápido
-- **React Router DOM** para enrutamiento SPA
-- **Zustand** para estado global persistente
-- **Axios** para peticiones HTTP
-- **Tailwind CSS** para estilos
-- **Lucide React** para iconografía
+Modern frontend application for managing volunteer programs and activities at Universidad Católica Boliviana (UCB). It enables volunteers, coordinators, and administrators to collaborate efficiently on social impact initiatives.
 
-## Arquitectura
+---
 
-```
+## Tech Stack
+
+- **React 18** with TypeScript for strict typing
+- **Vite** as an ultra-fast build tool
+- **React Router DOM** for SPA routing
+- **Zustand** for persistent global state management (JWT Token and Session)
+- **Axios** with interceptors for HTTP requests
+- **Tailwind CSS** for responsive UI styling
+- **Lucide React** for modern iconography
+
+---
+
+## Architecture (Domain-Driven Design)
+
+The project was refactored into a domain-oriented architecture (`features`), removing role-based segmentation to encourage code reuse through conditional rendering.
+
+```text
 src/
-├── service/              # Capa global de servicios
-│   ├── api/             # Cliente HTTP (apiClient, auth)
-│   ├── hooks/           # Hooks reutilizables (useFetch, useForm)
-│   └── types/           # Tipos globales
-├── modules/             # Módulos por rol
-│   ├── admin/
-│   ├── coordinator/
-│   └── volunteer/
-├── utils/               # Utilidades transversales
-│   ├── exceptions/      # Manejo de errores
-│   ├── validations/     # Validaciones
-│   ├── store/           # Zustand stores
-│   └── router/          # Route guards
-├── components/          # Componentes compartidos
-└── pages/               # Páginas globales (Auth)
+├── app/                  # Global configuration and initialization
+│   ├── store/            # Global State Management (Zustand)
+│   │   └── authStore.ts
+│   └── providers/        # Context providers
+│
+├── shared/               # Reusable global resources
+│   ├── components/       # Generic UI (Button, Modal, Table, Sidebar)
+│   ├── hooks/            # Reusable hooks
+│   └── services/         # Centralized HTTP client (Axios)
+│
+├── features/             # Business modules grouped by domain
+│   ├── programas/
+│   ├── actividades/
+│   └── miembros/
+│
+├── routes/
+│   └── GuardRole.tsx     # Route protection based on claims and roles
+│
+└── App.tsx               # Main router container
 ```
 
-### Patrón de Módulos
-Cada módulo (admin, coordinator, volunteer) contiene:
+### Feature Pattern
+
+Each domain inside `features/` is self-contained and includes its own business logic:
+
+```text
+features/domain-name/
+├── hooks/      # Domain-specific hooks
+├── services/   # HTTP calls using Axios
+└── views/      # Smart views and conditional rendering
 ```
-module/
-├── service/
-│   ├── api/            # Definiciones de endpoints
-│   ├── types/          # Tipos TypeScript del módulo
-│   └── hooks/          # Hooks de data fetching
-├── components/         # Componentes reutilizables
-└── pages/             # Páginas del módulo
-```
 
-## Instalación
+---
 
-### Requisitos
-- Node.js 18+ 
-- npm o pnpm
+## Installation and Deployment
 
-### Pasos
+### Requirements
 
-1. **Clonar repositorio**
-   ```bash
-   git clone https://github.com/henrrycoronado/U-voluntapp.git
-   cd U-voluntapp/U-voluntapp_web
-   ```
+- Node.js 18+
+- npm or pnpm
 
-2. **Instalar dependencias**
-   ```bash
-   npm install
-   # o
-   pnpm install
-   ```
+### Steps
 
-3. **Configurar variables de entorno**
-   - Copiar `.env.example` a `.env.local` (si existe)
-   - Configurar `VITE_API_BASE_URL` pointing to backend (default: `http://localhost:5000`)
+### 1. Clone the repository
 
-   ```bash
-   echo "VITE_API_BASE_URL=http://localhost:5000" > .env.local
-   ```
-
-4. **Iniciar servidor de desarrollo**
-   ```bash
-   npm run dev
-   # Abrirá http://localhost:5173
-   ```
-
-5. **Build para producción**
-   ```bash
-   npm run build
-   npm run preview  # Preview del build
-   ```
-
-## Desarrollo
-
-### Comandos Disponibles
 ```bash
-npm run dev       # Servidor desarrollo (Vite)
-npm run build     # Build optimizado
-npm run preview   # Preview del build
-npm run lint      # ESLint check
-npm run lint:fix  # ESLint auto-fix
+git clone https://github.com/henrrycoronado/U-voluntapp.git
+cd U-voluntapp_web
 ```
 
-### Estructura de Commits
-```
-feat: nueva funcionalidad
-fix: corrección de bug
-refactor: reorganización sin cambios funcionales
-chore: tareas administrativas
-docs: documentación
+### 2. Install dependencies
+
+```bash
+npm install
 ```
 
-## Flujo de Autenticación
+### 3. Configure environment variables
 
-1. **Login**: POST `/api/v1/auth/login` → JWT + User profile
-2. **Persistencia**: Token almacenado en Zustand (authStore)
-3. **Protección**: ProtectedRoute verifica token y rol
-4. **Auto-logout**: Token expirado dispara redirect a login
+Copy the `.env.example` file into `.env` and configure the backend URL.
 
-## API Endpoints
-
-Base: `http://localhost:5000/api/v1/`
-
-### Públicos (Sin Auth)
-- `POST /auth/register` - Registro
-- `POST /auth/login` - Login
-- `POST /auth/logout` - Logout
-
-### Autenticados
-- `GET /profiles/me` - Perfil del usuario
-- `GET /programs` - Listar programas (filtrado por rol)
-- `GET /activities/by-program/{id}` - Actividades de programa
-- `GET /enrollments/mine` - Mis inscripciones
-- `POST /enrollments` - Inscribirse en actividad
-- `PATCH /enrollments/{id}/review` - Revisar inscripción (Coordinador/Admin)
-- Y más según rol...
-
-Documentación completa en [API_ENDPOINTS_ANALYSIS.md](/memories/repo/API_ENDPOINTS_ANALYSIS.md)
-
-## Roles y Permisos
-
-### Voluntario
-- Navegar programas y actividades
-- Inscribirse en actividades
-- Gestionar su perfil
-- Solicitar rol de coordinador
-
-### Coordinador
-- Crear/editar programas y actividades
-- Revisar inscripciones de voluntarios
-- Generar reportes básicos
-- Solicitar rol de administrador
-
-### Administrador
-- Aprobar/rechazar solicitudes de rol
-- Acceso a reportes avanzados
-- Gestionar todos los programas y actividades
-- Administrar usuarios
-
-## Desarrollo de Nuevas Funcionalidades
-
-### Crear un Hook de Data Fetching
-```typescript
-// module/service/hooks/useMyData.ts
-import { useFetch } from '../../../../service/hooks/useFetch';
-import { moduleApi } from '../api/moduleApi';
-
-export function useMyData() {
-  return useFetch(() => moduleApi.getMyData());
-}
+```env
+VITE_API_BASE_URL=http://localhost:5277
 ```
 
-### Crear un Endpoint API
-```typescript
-// module/service/api/moduleApi.ts
-export const moduleApi = {
-  getMyData: () => 
-    apiClient.get<MyDataType>('/api/v1/endpoint'),
-};
+### 4. Start the development server
+
+```bash
+npm run dev
 ```
 
-### Crear un Componente Reutilizable
-```typescript
-// module/components/MyComponent.tsx
-import { Card, Button, Input } from '../../../components';
+The application will be available at:
 
-interface MyComponentProps {
-  data: any;
-  onSubmit: (value: any) => void;
-}
-
-export function MyComponent({ data, onSubmit }: MyComponentProps) {
-  return (
-    <Card>
-      {/* Componente JSX */}
-    </Card>
-  );
-}
+```text
+http://localhost:5173
 ```
 
-## Troubleshooting
+---
 
-### "Module not found" imports
-- Verificar rutas relativas con escalas correctas `../../../service/`
-- Usar barrel exports (`index.ts`) para simplificar imports
+## Roles and Conditional Rendering
 
-### CORS errors
-- Backend debe estar corriendo en puerto 5000
-- Verificar CORS settings en backend
+Interfaces dynamically adapt according to the permissions stored in `authStore`.
 
-### Token expirado
-- Login automático redirige a `/login`
-- Revisar localStorage para token persistencia
+### Volunteer
 
-## Estructura de Estado Global
+- Read-only access
+- Program and activity enrollment
 
-### authStore (Zustand)
-```typescript
-{
-  user: UserProfile | null
-  token: string | null
-  isAuthenticated: boolean
-  role: 'volunteer' | 'coordinator' | 'admin'
-  setUser: (user: UserProfile) => void
-  logout: () => void
-}
+### Coordinator
+
+- Management of assigned programs
+- Creation and administration of activities
+
+### Administrator
+
+- Full system-wide access
+- User management
+- Approval of requests and reports
+
+---
+
+## Development and Contribution
+
+### Git Workflow (Simplified GitFlow)
+
+```bash
+# Create branch from develop
+git checkout -b feature/change-name
+
+# Commit using Conventional Commits
+git commit -m "feat: add activity form"
+
+# Push changes
+git push origin feature/change-name
 ```
 
-### themeStore (Zustand)
-```typescript
-{
-  isDark: boolean
-  toggle: () => void
-}
-```
+### Commit Convention
 
-## Performance
+| Prefix | Description |
+|---|---|
+| `feat:` | New feature |
+| `fix:` | Bug fix |
+| `refactor:` | Architectural restructuring without functional changes |
+| `chore:` | Administrative tasks or dependency updates |
 
-- **Lazy loading** de módulos por ruta
-- **Code splitting** automático con Vite
-- **Memoization** de componentes en listas
-- **Request deduplication** con hooks reutilizables
+---
 
-## Contribución
+## Development Team
 
-1. Crear rama desde `develop`: `git checkout -b feature/tu-feature`
-2. Hacer commits atómicos
-3. Push a rama
-4. Crear Pull Request a `develop`
-5. Esperar review
+Project developed for the course **Aplicaciones Web II** — Seventh Semester.
 
-## Roadmap
-
-- [ ] Componentes adicionales (DataGrid, DatePicker, etc.)
-- [ ] Temas dinámicos avanzados
-- [ ] Notificaciones en tiempo real
-- [ ] Offline support
-- [ ] PWA capabilities
-
-## Licencia
-
-MIT
-
-## Contacto
-
-Equipo de desarrollo: [tu-email@example.com]
+---
