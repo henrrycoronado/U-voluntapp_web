@@ -1,4 +1,4 @@
-name: Pipeline Develop
+name: Pipeline Develop (CI)
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 permissions:
   contents: read
-  packages: write
+  security-events: write
 
 concurrency:
   group: pipeline-develop-${{ github.ref }}
@@ -19,10 +19,6 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,47 +28,30 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
-          cache-dependency-path: package-lock.json
+          cache-dependency-path: U-voluntapp_web/package-lock.json
 
       - name: Install dependencies
+        working-directory: U-voluntapp_web
         run: npm ci
 
       - name: Lint
+        working-directory: U-voluntapp_web
         run: npm run lint
 
-      - name: Type Check
-        run: npm run build # Vite build runs tsc by default as configured in your scripts
+      - name: Build (Type Check & Compilation)
+        working-directory: U-voluntapp_web
+        run: npm run build
 
-      - name: Validate Docker compose
-        run: docker compose config
+      - name: Build Temporary Image for Scan
+        run: |
+          docker build -t uvoluntapp-web:scan -f U-voluntapp_web/Dockerfile U-voluntapp_web/
 
-  cd:
-    needs: ci
-    if: ${{ github.event_name == 'push' }}
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Login to GHCR
-        uses: docker/login-action@v3
+      - name: Security Scan (Trivy)
+        uses: aquasecurity/trivy-action@master
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push develop image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/u-voluntapp-web:develop
-            ghcr.io/${{ github.repository_owner }}/u-voluntapp-web:develop-${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          image-ref: 'uvoluntapp-web:scan'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
