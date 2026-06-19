@@ -1,119 +1,107 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Input } from '../components/Input';
-import { Button } from '../components/Button';
-import { Alert } from '../components/Alert';
-import { useRegister } from '../service/hooks/useAuth';
+import { Button } from '../core/components/atoms/Button';
+import { Input } from '../core/components/atoms/Input';
+import { Card } from '../core/components/atoms/Card';
+import { useAuth } from '../features/auth/hooks/useAuth';
+import { isInstitutionalEmail } from '../core/utils/validations';
 
-export const SignUpPage = () => {
+export const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
-  const { register, isLoading, error: registerError } = useRegister();
+  const { signup, isSigningUp } = useAuth();
 
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-  });
-  const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '' });
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorMsg('');
+
+    if (!form.firstName || !form.lastName || !form.email || !form.password) {
+      setErrorMsg('Todos los campos son requeridos.');
+      return;
+    }
+
+    if (!isInstitutionalEmail(form.email)) {
+      setErrorMsg('Debe ser un correo institucional (ej. .edu.bo).');
+      return;
+    }
 
     try {
-      const payload = {
-        ...formData,
-        phone: '77777777',
-      };
-
-      await register(payload);
-      navigate('/programs');
-    } catch {
-      // Error is already handled in the hook
+      await signup(form);
+      navigate('/login');
+    } catch (error: unknown) {
+      const err = error as Error;
+      setErrorMsg(err.message || 'Error al registrar la cuenta');
     }
   };
 
-  const displayError = registerError || error;
-
   return (
-    <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center font-sans text-white py-10">
-      <div className="mb-8 flex items-center gap-2">
-        <div className="w-8 h-8 flex items-center justify-center bg-yellow-500 rounded-md">
-          <span className="text-black font-bold text-lg">U</span>
-        </div>
-        <span className="text-2xl font-bold tracking-tight">
-          U-Volunt<span className="text-yellow-500">App</span>
-        </span>
-      </div>
-
-      <div className="bg-[#18181b] p-8 rounded-2xl border border-zinc-800/80 w-full max-w-[400px] shadow-xl">
+    <div className="flex-1 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-xl font-bold mb-1">Create your account</h1>
-          <p className="text-xs text-zinc-400">Enter your basic information to join.</p>
+          <h1 className="text-2xl font-bold text-yellow-500">Crear Cuenta</h1>
+          <p className="text-sm text-zinc-400 mt-2">
+            Regístrate como voluntario usando tu correo institucional
+          </p>
         </div>
 
-        {displayError && (
-          <Alert variant="error" className="mb-6 bg-red-950 border-red-900 text-red-400">
-            {displayError}
-          </Alert>
+        {errorMsg && (
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-500/50 text-red-400 text-sm rounded-md">
+            {errorMsg}
+          </div>
         )}
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="First Name"
-              type="text"
+              label="Nombre"
               name="firstName"
-              value={formData.firstName}
+              value={form.firstName}
               onChange={handleChange}
-              placeholder="Daniel"
-              required
+              placeholder="Juan"
             />
             <Input
-              label="Last Name"
-              type="text"
+              label="Apellido"
               name="lastName"
-              value={formData.lastName}
+              value={form.lastName}
               onChange={handleChange}
-              placeholder="Irigoyen"
-              required
+              placeholder="Pérez"
             />
           </div>
-
           <Input
-            label="Institutional Email"
-            type="email"
+            label="Correo Institucional"
             name="email"
-            value={formData.email}
+            type="email"
+            value={form.email}
             onChange={handleChange}
-            placeholder="daniel@ucb.edu.bo"
-            required
+            placeholder="usuario@ucb.edu.bo"
           />
           <Input
-            label="Password"
-            type="password"
+            label="Contraseña"
             name="password"
-            value={formData.password}
+            type="password"
+            value={form.password}
             onChange={handleChange}
-            placeholder="Min. 8 characters"
-            required
+            placeholder="••••••••"
           />
 
-          <div className="mt-6 flex items-center justify-between">
-            <Link to="/login" className="text-xs text-zinc-400 hover:text-white transition-colors">
-              I already have an account
-            </Link>
-            <Button variant="primary" type="submit" className="!w-auto px-6" disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Sign Up'}
-            </Button>
-          </div>
+          <Button type="submit" className="w-full mt-2" isLoading={isSigningUp}>
+            Registrarme
+          </Button>
         </form>
-      </div>
+
+        <div className="mt-6 text-center text-sm text-zinc-500">
+          ¿Ya tienes cuenta?{' '}
+          <Link to="/login" className="text-yellow-500 hover:underline">
+            Inicia sesión
+          </Link>
+        </div>
+      </Card>
     </div>
   );
 };

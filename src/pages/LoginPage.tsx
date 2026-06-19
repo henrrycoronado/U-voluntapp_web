@@ -1,92 +1,78 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Input } from '../components/Input';
-import { Button } from '../components/Button';
-import { Alert } from '../components/Alert';
-import { useLogin } from '../service/hooks/useAuth';
+import { Button } from '../core/components/atoms/Button';
+import { Input } from '../core/components/atoms/Input';
+import { Card } from '../core/components/atoms/Card';
+import { useAuth } from '../features/auth/hooks/useAuth';
 
-export const LoginPage = () => {
+export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, isLoading, error: loginError } = useLogin();
+  const { login, isLoggingIn } = useAuth();
 
-  const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState<string | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorMsg('');
+
+    if (!email || !password) {
+      setErrorMsg('Por favor llena todos los campos.');
+      return;
+    }
 
     try {
-      await login(formData);
-      navigate('/programs');
-    } catch {
-      // Error is already handled in the hook, but we can set local error if needed or use the hook's error
+      await login({ email, password });
+      navigate('/dashboard');
+    } catch (error: unknown) {
+      const err = error as Error;
+      setErrorMsg(err.message || 'Error al iniciar sesión');
     }
   };
 
-  const displayError = loginError || error;
-
   return (
-    <div className="min-h-screen bg-[#0a0a0b] flex flex-col items-center justify-center font-sans text-white">
-      <div className="mb-8 flex items-center gap-2">
-        <div className="w-8 h-8 flex items-center justify-center bg-yellow-500 rounded-md">
-          <span className="text-black font-bold text-lg">U</span>
-        </div>
-        <span className="text-2xl font-bold tracking-tight">
-          U-Volunt<span className="text-yellow-500">App</span>
-        </span>
-      </div>
-
-      <div className="bg-[#18181b] p-8 rounded-2xl border border-zinc-800/80 w-full max-w-[400px] shadow-xl">
+    <div className="flex-1 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-xl font-bold mb-1">Sign In</h1>
-          <p className="text-xs text-zinc-400">Enter your account to continue helping.</p>
+          <h1 className="text-2xl font-bold text-yellow-500">Bienvenido de nuevo</h1>
+          <p className="text-sm text-zinc-400 mt-2">Ingresa tus credenciales para acceder</p>
         </div>
 
-        {displayError && (
-          <Alert variant="error" className="mb-6 bg-red-950 border-red-900 text-red-400">
-            {displayError}
-          </Alert>
+        {errorMsg && (
+          <div className="mb-4 p-3 bg-red-950/50 border border-red-500/50 text-red-400 text-sm rounded-md">
+            {errorMsg}
+          </div>
         )}
 
-        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input
-            label="Email"
+            label="Correo Institucional"
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="admin@ucb.edu.bo"
-            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="usuario@ucb.edu.bo"
           />
           <Input
-            label="Password"
+            label="Contraseña"
             type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
-            required
           />
 
-          <div className="mt-2">
-            <Button variant="primary" type="submit" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
-            </Button>
-          </div>
+          <Button type="submit" className="w-full" isLoading={isLoggingIn}>
+            Entrar al Sistema
+          </Button>
         </form>
 
-        <div className="mt-6 text-center text-xs text-zinc-400">
-          Don't have an account?{' '}
+        <div className="mt-6 text-center text-sm text-zinc-500">
+          ¿No tienes una cuenta?{' '}
           <Link to="/signup" className="text-yellow-500 hover:underline">
-            Sign up
+            Regístrate aquí
           </Link>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

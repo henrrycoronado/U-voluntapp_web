@@ -1,8 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Build
 dist/
@@ -23,6 +20,12 @@ lerna-debug.log*
 .env
 .env.local
 .env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage/
 
 # IDE
 .vscode/
@@ -37,10 +40,12 @@ lerna-debug.log*
 .AppleDouble
 .LSOverride
 
-# Cache
+# Cache & Build Info
 .cache/
 .eslintcache
 .parcel-cache/
+*.tsbuildinfo
+.vite/
 
 # Temp files
 *.tmp

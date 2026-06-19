@@ -1,16 +1,20 @@
-export default function NotFoundPage() {
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '../core/components/atoms/Button';
+
+export const NotFoundPage: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="text-center">
-        <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-8">Página no encontrada</p>
-        <a
-          href="/"
-          className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
-        >
-          Volver al inicio
-        </a>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-black text-zinc-100">
+      <h1 className="text-9xl font-extrabold text-zinc-800">404</h1>
+      <h2 className="text-2xl font-bold mt-4">Página no encontrada</h2>
+      <p className="text-zinc-400 mt-2 max-w-md">
+        Lo sentimos, la página que buscas no existe o ha sido movida.
+      </p>
+      <Link to="/" className="mt-8">
+        <Button>Volver al inicio</Button>
+      </Link>
     </div>
   );
-}
+};
+
+export default NotFoundPage;

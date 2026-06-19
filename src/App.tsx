@@ -1,12 +1,21 @@
-import { BrowserRouter } from 'react-router-dom';
-import AppRoutes from './routes/AppRoutes';
+import React from 'react';
+import AppRouter from './core/routes/AppRouter';
+import { useThemeStore } from './core/store/themeStore';
 
-function App() {
+const App: React.FC = () => {
+  useThemeStore();
+
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <React.Suspense
+      fallback={
+        <div className="min-h-screen bg-black flex items-center justify-center text-yellow-500">
+          Cargando...
+        </div>
+      }
+    >
+      <AppRouter />
+    </React.Suspense>
   );
-}
+};
 
 export default App;
