@@ -3,14 +3,10 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 # Argumentos de construcción para variables de entorno de Vite
-ARG VITE_API_BASE_URL
-ARG VITE_JWT_STORAGE_KEY
-ARG VITE_ENABLE_DEBUG
+ARG VITE_API_URL
 
 # Pasar argumentos a variables de entorno para que Vite las use en el build
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
-ENV VITE_JWT_STORAGE_KEY=$VITE_JWT_STORAGE_KEY
-ENV VITE_ENABLE_DEBUG=$VITE_ENABLE_DEBUG
+ENV VITE_API_URL=$VITE_API_URL
 
 # Instalar dependencias
 COPY package*.json ./

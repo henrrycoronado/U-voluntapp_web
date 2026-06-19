@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { APP_CONFIG } from '../../utils/constants';
+import { useToastStore } from '../../store/toastStore';
 
 export const apiClient = axios.create({
   baseURL: APP_CONFIG.API_URL,
@@ -29,8 +30,20 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    const { addToast } = useToastStore.getState();
+    const errorData = error.response?.data;
+    const msg =
+      errorData?.detail ||
+      errorData?.title ||
+      error.message ||
+      'Error desconocido';
+
     if (error.response?.status === 401) {
-      console.warn('Unauthorized request. Token might be invalid or expired.');
+      addToast('error', 'Sesión expirada o no autorizada. Inicia sesión nuevamente.');
+    } else if (error.response?.status === 403) {
+      addToast('error', 'No tienes permisos para realizar esta acción.');
+    } else {
+      addToast('error', msg);
     }
     return Promise.reject(error);
   }

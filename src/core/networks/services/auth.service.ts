@@ -1,5 +1,5 @@
-import { apiClient } from '../../../core/networks/api/client';
-import { handleApiError } from '../../../core/networks/exceptions/api.exceptions';
+import { apiClient } from '../api/client';
+import { handleApiError } from '../exceptions/api.exceptions';
 import type { LoginRequest, LoginResponse, SignupRequest } from '../types';
 
 export const authService = {
@@ -12,9 +12,10 @@ export const authService = {
     }
   },
 
-  signup: async (request: SignupRequest): Promise<void> => {
+  signup: async (request: SignupRequest): Promise<LoginResponse> => {
     try {
-      await apiClient.post('/v1/auth/register', request);
+      const response = await apiClient.post<LoginResponse>('/v1/auth/register', request);
+      return response.data;
     } catch (error) {
       throw handleApiError(error);
     }

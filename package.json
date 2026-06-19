@@ -12,17 +12,26 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-query-devtools": "^5.91.3",
     "axios": "^1.13.6",
+    "browser-image-compression": "^2.0.2",
+    "js-yaml": "^4.2.0",
+    "leaflet": "^1.9.4",
     "lucide-react": "^1.7.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.79.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.13.1",
+    "recharts": "^3.8.1",
+    "zod": "^4.4.3",
     "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/leaflet": "^1.9.21",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

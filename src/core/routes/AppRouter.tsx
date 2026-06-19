@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import PublicLayout from '../../layout/PublicLayout';
-import PrivateLayout from '../../layout/PrivateLayout';
+import { PublicLayout } from '../components/layout/PublicLayout';
+import { PrivateLayout } from '../components/layout/PrivateLayout';
 
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
@@ -14,6 +14,9 @@ import NotFoundPage from '../../pages/NotFoundPage';
 import UnauthorizedPage from '../../pages/UnauthorizedPage';
 
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
+import ProfilePage from '../../features/profiles/pages/ProfilePage';
+import ProgramsPage from '../../features/programs/pages/ProgramsPage';
+import ActivitiesPage from '../../features/activities/pages/ActivitiesPage';
 
 export const AppRouter: React.FC = () => {
   return (
@@ -30,11 +33,13 @@ export const AppRouter: React.FC = () => {
         <Route element={<PrivateRoute />}>
           <Route element={<PrivateLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/programs" element={<ProgramsPage />} />
+            <Route path="/activities" element={<ActivitiesPage />} />
           </Route>
         </Route>
 
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
-
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

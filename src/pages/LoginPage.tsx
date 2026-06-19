@@ -1,74 +1,27 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../core/components/atoms/Button';
-import { Input } from '../core/components/atoms/Input';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card } from '../core/components/atoms/Card';
-import { useAuth } from '../core/networks/hooks/useAuth';
+import { LoginForm } from '../features/auth/components';
 
 export const LoginPage: React.FC = () => {
-  const navigate = useNavigate();
-  const { login, isLoggingIn } = useAuth();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMsg('');
-
-    if (!email || !password) {
-      setErrorMsg('Por favor llena todos los campos.');
-      return;
-    }
-
-    try {
-      await login({ email, password });
-      navigate('/dashboard');
-    } catch (error: unknown) {
-      const err = error as Error;
-      setErrorMsg(err.message || 'Error al iniciar sesión');
-    }
-  };
-
   return (
-    <div className="flex-1 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="flex-1 flex items-center justify-center p-4 min-h-screen bg-black relative overflow-hidden">
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <Card className="w-full max-w-md relative z-10 bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl p-8 rounded-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-yellow-500">Bienvenido de nuevo</h1>
-          <p className="text-sm text-zinc-400 mt-2">Ingresa tus credenciales para acceder</p>
+          <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-500">
+            Bienvenido de nuevo
+          </h1>
+          <p className="text-sm text-zinc-400 mt-2">Ingresa tus credenciales institucionales</p>
         </div>
 
-        {errorMsg && (
-          <div className="mb-4 p-3 bg-red-950/50 border border-red-500/50 text-red-400 text-sm rounded-md">
-            {errorMsg}
-          </div>
-        )}
+        <LoginForm />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Correo Institucional"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="usuario@ucb.edu.bo"
-          />
-          <Input
-            label="Contraseña"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-          />
-
-          <Button type="submit" className="w-full" isLoading={isLoggingIn}>
-            Entrar al Sistema
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center text-sm text-zinc-500">
+        <div className="mt-8 text-center text-sm text-zinc-500">
           ¿No tienes una cuenta?{' '}
-          <Link to="/signup" className="text-yellow-500 hover:underline">
+          <Link to="/signup" className="text-yellow-400 hover:text-yellow-300 font-medium hover:underline transition-colors">
             Regístrate aquí
           </Link>
         </div>
