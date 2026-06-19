@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../core/components/atoms/Button';
 import { Input } from '../core/components/atoms/Input';
 import { Card } from '../core/components/atoms/Card';
-import { useAuth } from '../features/auth/hooks/useAuth';
+import { useAuth } from '../core/networks/hooks/useAuth';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();

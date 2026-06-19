@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { AuthUser, UserRole } from '../../features/auth/types';
+import type { AuthUser, UserRole } from '../networks/types/index';
 
 function parseRolesFromToken(token: string): UserRole[] {
   try {
