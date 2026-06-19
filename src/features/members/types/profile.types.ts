@@ -1,4 +1,0 @@
-export type {
-  Profile as UserProfile,
-  UpdateProfileRequest,
-} from '../../profile/types/profile.types';
