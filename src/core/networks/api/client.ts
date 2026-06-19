@@ -2,8 +2,16 @@ import axios from 'axios';
 import { APP_CONFIG } from '../../utils/constants';
 import { useToastStore } from '../../store/toastStore';
 
+const getBaseUrl = () => {
+  const url = APP_CONFIG.API_URL || '';
+  if (url && !url.endsWith('/api')) {
+    return url.endsWith('/') ? `${url}api` : `${url}/api`;
+  }
+  return url;
+};
+
 export const apiClient = axios.create({
-  baseURL: APP_CONFIG.API_URL,
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -32,11 +40,7 @@ apiClient.interceptors.response.use(
   (error) => {
     const { addToast } = useToastStore.getState();
     const errorData = error.response?.data;
-    const msg =
-      errorData?.detail ||
-      errorData?.title ||
-      error.message ||
-      'Error desconocido';
+    const msg = errorData?.detail || errorData?.title || error.message || 'Error desconocido';
 
     if (error.response?.status === 401) {
       addToast('error', 'Sesión expirada o no autorizada. Inicia sesión nuevamente.');
