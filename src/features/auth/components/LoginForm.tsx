@@ -11,7 +11,7 @@ export const LoginForm: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const loginMutation = useLogin();
   const navigate = useNavigate();
-  const setAuth = useAuthStore(state => state.setAuth);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,10 +26,10 @@ export const LoginForm: React.FC = () => {
         lastName: res.lastName,
         token: res.token,
         refreshToken: res.refreshToken,
-        roles: res.roles as any,
+        roles: res.roles as string[],
       });
       navigate('/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
       setErrorMsg('Error al iniciar sesión');
     }
@@ -37,10 +37,28 @@ export const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-full">
-      {errorMsg && <div className="p-3 bg-red-950/50 border border-red-500/50 text-red-400 rounded-lg text-sm">{errorMsg}</div>}
-      <Input label="Correo Institucional" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="usuario@ucb.edu.bo" />
-      <Input label="Contraseña" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" />
-      <Button type="submit" className="w-full mt-4" isLoading={loginMutation.isPending}>Entrar al Sistema</Button>
+      {errorMsg && (
+        <div className="p-3 bg-red-950/50 border border-red-500/50 text-red-400 rounded-lg text-sm">
+          {errorMsg}
+        </div>
+      )}
+      <Input
+        label="Correo Institucional"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="usuario@ucb.edu.bo"
+      />
+      <Input
+        label="Contraseña"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="••••••••"
+      />
+      <Button type="submit" className="w-full mt-4" isLoading={loginMutation.isPending}>
+        Entrar al Sistema
+      </Button>
     </form>
   );
 };
