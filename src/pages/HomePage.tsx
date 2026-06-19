@@ -9,8 +9,8 @@ export const HomePage: React.FC = () => {
         Gestiona el voluntariado con <span className="text-yellow-500">precisión</span>.
       </h1>
       <p className="text-lg md:text-xl text-zinc-400 max-w-2xl">
-        Plataforma institucional de la Universidad Católica Boliviana para coordinar, registrar y
-        trazar la participación y asistencia de voluntarios.
+        Plataforma de la Pastoral Universitaria Juveil para coordinar, registrar y trazar la
+        participación y asistencia de voluntarios.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-4">
         <Link to="/login" className="w-full sm:w-auto">
