@@ -76,7 +76,7 @@ jobs:
           file: Dockerfile
           push: true
           build-args: |
-            VITE_API_BASE_URL=${{ secrets.VITE_API_URL }}
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
             VITE_R2_PUBLIC_URL=${{ secrets.VITE_R2_PUBLIC_URL }}
           tags: |
             ghcr.io/${{ github.repository_owner }}/u-voluntapp-web:latest
