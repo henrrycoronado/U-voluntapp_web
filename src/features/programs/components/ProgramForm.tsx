@@ -14,12 +14,19 @@ const programSchema = z.object({
 
 type ProgramFormValues = z.infer<typeof programSchema>;
 
+import type { ProgramDto } from '../types';
+
 interface ProgramFormProps {
   onSuccess?: () => void;
+  programToEdit?: ProgramDto;
 }
 
 export const ProgramForm: React.FC<ProgramFormProps> = ({ onSuccess }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm<ProgramFormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ProgramFormValues>({
     resolver: zodResolver(programSchema),
   });
 
@@ -27,23 +34,33 @@ export const ProgramForm: React.FC<ProgramFormProps> = ({ onSuccess }) => {
   const { addToast } = useToastStore();
 
   const onSubmit = (data: ProgramFormValues) => {
-    mutate({
-      name: data.name,
-      acronym: data.acronym || undefined,
-    }, {
-      onSuccess: () => {
-        addToast('success', 'Programa creado exitosamente');
-        if (onSuccess) onSuccess();
+    mutate(
+      {
+        name: data.name,
+        acronym: data.acronym || undefined,
+      },
+      {
+        onSuccess: () => {
+          addToast('success', 'Programa creado exitosamente');
+          if (onSuccess) onSuccess();
+        },
       }
-    });
+    );
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input label="Nombre del Programa" {...register('name')} error={errors.name?.message} />
-      <Input label="Acrónimo (opcional)" {...register('acronym')} error={errors.acronym?.message} placeholder="Ej. VOL, PASB" />
+      <Input
+        label="Acrónimo (opcional)"
+        {...register('acronym')}
+        error={errors.acronym?.message}
+        placeholder="Ej. VOL, PASB"
+      />
       <div className="pt-4 flex justify-end">
-        <Button type="submit" variant="primary" isLoading={isPending}>Crear Programa</Button>
+        <Button type="submit" variant="primary" isLoading={isPending}>
+          Crear Programa
+        </Button>
       </div>
     </form>
   );

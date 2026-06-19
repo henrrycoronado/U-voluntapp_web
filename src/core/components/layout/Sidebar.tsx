@@ -12,6 +12,7 @@ import {
   User,
   Settings,
   LogOut,
+  UserPlus,
 } from 'lucide-react';
 import Logo from '../../assets/Logo.svg';
 
@@ -22,12 +23,18 @@ export const Sidebar: React.FC = () => {
   const mainMenuItems = [
     { label: 'Dashboard', path: '/dashboard', roles: [], icon: LayoutDashboard },
     { label: 'Programas', path: '/programs', roles: [], icon: CalendarDays },
-    { label: 'Ult. Actividades', path: '/activities', roles: [], icon: Activity },
+    { label: 'Actividades', path: '/activities', roles: [], icon: Activity },
     {
       label: 'Historial',
       path: '/tracking',
       roles: ['Admin', 'SuperUser', 'Coordinator', 'Volunteer'],
       icon: History,
+    },
+    {
+      label: 'Solicitudes',
+      path: '/requests',
+      roles: ['Admin', 'SuperUser', 'Coordinator', 'Volunteer'],
+      icon: UserPlus,
     },
     { label: 'Reportes', path: '/reports', roles: ['Admin', 'SuperUser'], icon: PieChart },
   ];
