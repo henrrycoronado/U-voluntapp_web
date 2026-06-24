@@ -31,7 +31,7 @@ export const HomePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-center gap-6 w-full pt-8">
           <Link to="/login" className="w-full sm:w-auto">
             <Button size="lg" className="w-full text-lg px-8 py-6 shadow-xl shadow-yellow-500/20">
-              Iniciar Sesión
+              Empieza Ahora
             </Button>
           </Link>
           <Link to="/signup" className="w-full sm:w-auto">
@@ -40,7 +40,7 @@ export const HomePage: React.FC = () => {
               size="lg"
               className="w-full text-lg px-8 py-6 border-zinc-700 hover:bg-white/10 backdrop-blur-md"
             >
-              Crear Cuenta Institucional
+              Crear tu Cuenta
             </Button>
           </Link>
         </div>
